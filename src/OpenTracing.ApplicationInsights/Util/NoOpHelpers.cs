@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OpenTracing.Noop;
+﻿using OpenTracing.Noop;
 
-namespace OpenTracing.ApplicationInsights.Internal
+namespace OpenTracing.ApplicationInsights.Util
 {
     /// <summary>
     /// INTERNAL API

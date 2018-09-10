@@ -1,6 +1,9 @@
 ﻿using System;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
+using OpenTracing.ApplicationInsights.Propagation;
 using OpenTracing.Propagation;
-using static OpenTracing.ApplicationInsights.Internal.NoOpHelpers;
+using static OpenTracing.ApplicationInsights.Util.NoOpHelpers;
 
 namespace OpenTracing.ApplicationInsights
 {
@@ -13,9 +16,25 @@ namespace OpenTracing.ApplicationInsights
     /// </remarks>
     public sealed class ApplicationInsightsTracer : ITracer
     {
+        private readonly TelemetryConfiguration _config;
+        private readonly IPropagator<ITextMap> _propagator;
+
+        public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager, IPropagator<ITextMap> propagator, ITimeProvider timeProvider)
+        {
+            Client = new TelemetryClient(config);
+            _config = config;
+            ScopeManager = scopeManager;
+            _propagator = propagator;
+            TimeProvider = timeProvider;
+        }
+
+        public ITimeProvider TimeProvider { get; }
+
+        public TelemetryClient Client { get; }
+
         public ISpanBuilder BuildSpan(string operationName)
         {
-            throw new NotImplementedException();
+            return new ApplicationInsightsSpanBuilder(this, operationName);
         }
 
         public void Inject<TCarrier>(ISpanContext spanContext, IFormat<TCarrier> format, TCarrier carrier)
