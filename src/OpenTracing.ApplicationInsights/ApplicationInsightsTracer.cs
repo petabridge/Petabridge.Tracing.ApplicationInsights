@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.ApplicationInsights.Propagation;
@@ -52,12 +51,26 @@ namespace OpenTracing.ApplicationInsights
 
         public void Inject<TCarrier>(ISpanContext spanContext, IFormat<TCarrier> format, TCarrier carrier)
         {
-            throw new NotImplementedException();
+            if ((format == BuiltinFormats.TextMap || format == BuiltinFormats.HttpHeaders) &&
+                carrier is ITextMap textMap)
+            {
+                if (spanContext is ApplicationInsightsSpanContext appInsightsContext)
+                    _propagator.Inject(appInsightsContext, textMap);
+                return;
+            }
+
+            throw new ApplicationInsightsFormatException(
+                $"Unrecognized carrier format [{format}]. Only ITextMap is supported by this driver.");
         }
 
         public ISpanContext Extract<TCarrier>(IFormat<TCarrier> format, TCarrier carrier)
         {
-            throw new NotImplementedException();
+            if ((format == BuiltinFormats.TextMap || format == BuiltinFormats.HttpHeaders) &&
+                carrier is ITextMap textMap)
+                return _propagator.Extract(textMap);
+
+            throw new ApplicationInsightsFormatException(
+                $"Unrecognized carrier format [{format}]. Only ITextMap is supported by this driver.");
         }
 
         public IScopeManager ScopeManager { get; }

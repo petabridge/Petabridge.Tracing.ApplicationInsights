@@ -24,12 +24,11 @@ namespace OpenTracing.ApplicationInsights
     public sealed class ApplicationInsightsSpanContext : IApplicationInsightsSpanContext
     {
         public ApplicationInsightsSpanContext(string traceId, string spanId,
-            string parentId = null, SpanKind operationType = SpanKind.SERVER)
+            string parentId = null)
         {
             TraceId = traceId;
             SpanId = spanId;
             ParentId = parentId;
-            OperationType = operationType;
         }
 
         public IEnumerable<KeyValuePair<string, string>> GetBaggageItems()
@@ -45,7 +44,6 @@ namespace OpenTracing.ApplicationInsights
 
         public string SpanId { get; }
         public string ParentId { get; }
-        public SpanKind OperationType { get; }
 
         public bool Equals(IApplicationInsightsSpanContext other)
         {
@@ -53,8 +51,7 @@ namespace OpenTracing.ApplicationInsights
             if (ReferenceEquals(this, other)) return true;
             return string.Equals(TraceId, other.TraceId)
                    && string.Equals(SpanId, other.SpanId)
-                   && string.Equals(ParentId, other.ParentId)
-                   && OperationType == other.OperationType;
+                   && string.Equals(ParentId, other.ParentId);
         }
 
         public override bool Equals(object obj)
@@ -71,7 +68,6 @@ namespace OpenTracing.ApplicationInsights
                 var hashCode = TraceId != null ? TraceId.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (SpanId != null ? SpanId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ParentId != null ? ParentId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (int) OperationType;
                 return hashCode;
             }
         }
@@ -96,11 +92,5 @@ namespace OpenTracing.ApplicationInsights
         ///     The operation_ParentId equivalent in the Application Insights data model.
         /// </summary>
         string ParentId { get; }
-
-        /// <summary>
-        ///     Indicates if this is a request or a dependency invocation per
-        ///     the Application Insights data model.
-        /// </summary>
-        SpanKind OperationType { get; }
     }
 }

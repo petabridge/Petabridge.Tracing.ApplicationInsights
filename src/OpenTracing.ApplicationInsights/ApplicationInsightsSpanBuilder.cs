@@ -19,11 +19,11 @@ namespace OpenTracing.ApplicationInsights
     public sealed class ApplicationInsightsSpanBuilder : ISpanBuilder
     {
         private readonly string _operationName;
+        private readonly SpanKind _spanKind = SpanKind.SERVER;
         private readonly ApplicationInsightsTracer _tracer;
         private bool _ignoreActive;
         private Dictionary<string, string> _initialTags;
         private List<SpanReference> _references;
-        private readonly SpanKind _spanKind = SpanKind.SERVER;
         private DateTimeOffset? _start;
 
         public ApplicationInsightsSpanBuilder(ApplicationInsightsTracer tracer, string operationName)
@@ -129,7 +129,7 @@ namespace OpenTracing.ApplicationInsights
 
             var context = new ApplicationInsightsSpanContext(
                 parentContext != null ? parentContext.TraceId : ThreadLocalRngIdProvider.NextId(),
-                ThreadLocalRngIdProvider.NextId(), parentContext?.SpanId, _spanKind);
+                ThreadLocalRngIdProvider.NextId(), parentContext?.SpanId);
             switch (_spanKind)
             {
                 case SpanKind.SERVER:
