@@ -7,7 +7,9 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.ApplicationInsights.Propagation;
+using OpenTracing.ApplicationInsights.Util;
 using OpenTracing.Propagation;
+using OpenTracing.Util;
 using static OpenTracing.ApplicationInsights.Util.NoOpHelpers;
 
 namespace OpenTracing.ApplicationInsights
@@ -23,6 +25,10 @@ namespace OpenTracing.ApplicationInsights
     {
         private readonly TelemetryConfiguration _config;
         private readonly IPropagator<ITextMap> _propagator;
+
+        public ApplicationInsightsTracer(TelemetryConfiguration config, Endpoint localEndpoint = null) : this(config, new AsyncLocalScopeManager(),
+            new B3Propagator(), new DateTimeOffsetTimeProvider(), localEndpoint)
+        { }
 
         public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager,
             IPropagator<ITextMap> propagator, ITimeProvider timeProvider, Endpoint localEndpoint)
