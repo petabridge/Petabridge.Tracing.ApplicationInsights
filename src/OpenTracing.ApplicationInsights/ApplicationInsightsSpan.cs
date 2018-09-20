@@ -23,6 +23,18 @@ namespace OpenTracing.ApplicationInsights
 
         string OperationName { get; }
 
+        IReadOnlyDictionary<string, string> Tags { get; }
+
+        /// <summary>
+        ///     The local <see cref="Endpoint" />
+        /// </summary>
+        Endpoint LocalEndpoint { get; }
+
+        /// <summary>
+        ///     The remote <see cref="Endpoint" />. Has to be set by the <see cref="ISpanBuilder" /> or the <see cref="ISpan" />.
+        /// </summary>
+        Endpoint RemoteEndpoint { get; }
+
         IApplicationInsightsSpan SetRemoteEndpoint(Endpoint remote);
     }
 

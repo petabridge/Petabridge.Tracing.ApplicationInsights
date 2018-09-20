@@ -54,21 +54,31 @@ namespace OpenTracing.ApplicationInsights
 
         internal void Report(IApplicationInsightsSpan span)
         {
-            ITelemetry telemetry = null;
             switch (span.SpanKind)
             {
                 case SpanKind.CLIENT:
-                    telemetry = new DependencyTelemetry()
+                    var dTelemetry = new DependencyTelemetry()
                     {
                         Id = span.TypedContext.SpanId,
                         Duration = span.Duration ?? TimeSpan.Zero,
                         Name = span.OperationName,
                     };
 
+                    // copy properties into tags
+                    foreach (var property in span.Tags)
+                    {
+                        dTelemetry.Properties[property.Key] = property.Value;
+                    }
+
+                    
+
+                    // set the correlation IDs
+                    dTelemetry.Context.Operation.ParentId = span.TypedContext.ParentId;
+
                     break;
             }
 
-            Client.Track(telemetry);
+
         }
     }
 }

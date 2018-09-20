@@ -76,5 +76,21 @@ namespace OpenTracing.ApplicationInsights
         {
             return !Equals(left, right);
         }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(ServiceName))
+            {
+                return Port.HasValue ? $"{Host}:{Port}" : Host;
+            }
+            else if (!string.IsNullOrEmpty(Host))
+            {
+                return Port.HasValue ? $"{ServiceName}[{Host}:{Port}]" : $"{ServiceName}[{Host}]";
+            }
+            else
+            {
+                return ServiceName;
+            }
+        }
     }
 }
