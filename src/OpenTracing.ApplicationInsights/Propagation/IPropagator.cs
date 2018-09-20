@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// -----------------------------------------------------------------------
+// <copyright file="IPropagator.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace OpenTracing.ApplicationInsights.Propagation
 {

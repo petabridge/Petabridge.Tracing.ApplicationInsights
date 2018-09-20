@@ -1,13 +1,18 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ThreadLocalRngIdProvider.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Globalization;
 using System.Threading;
 
 namespace OpenTracing.ApplicationInsights.Util
 {
     /// <summary>
-    /// INTERNAL API.
-    /// 
-    /// Used to generate randomized Trace and Operation IDs.
+    ///     INTERNAL API.
+    ///     Used to generate randomized Trace and Operation IDs.
     /// </summary>
     internal static class ThreadLocalRngIdProvider
     {
@@ -15,7 +20,7 @@ namespace OpenTracing.ApplicationInsights.Util
         private static readonly ThreadLocal<byte[]> Buffers = new ThreadLocal<byte[]>(() => new byte[8], false);
 
         /// <summary>
-        /// Generates a random 128-bit identifier.
+        ///     Generates a random 128-bit identifier.
         /// </summary>
         /// <returns>A new string containing a hex representation of a 128 bit identifier.</returns>
         public static string NextId()

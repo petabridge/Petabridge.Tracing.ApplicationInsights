@@ -1,26 +1,30 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ApplicationInsightsSpanBuilder.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using OpenTracing.ApplicationInsights.Util;
 using OpenTracing.Tag;
 
 namespace OpenTracing.ApplicationInsights
 {
     /// <summary>
-    /// Builder interface for creating <see cref="IApplicationInsightsSpan"/> instances.
+    ///     Builder interface for creating <see cref="IApplicationInsightsSpan" /> instances.
     /// </summary>
     public sealed class ApplicationInsightsSpanBuilder : ISpanBuilder
     {
-        private readonly ApplicationInsightsTracer _tracer;
         private readonly string _operationName;
+        private readonly ApplicationInsightsTracer _tracer;
+        private bool _ignoreActive;
         private Dictionary<string, string> _initialTags;
         private List<SpanReference> _references;
         private SpanKind _spanKind = SpanKind.SERVER;
         private DateTimeOffset? _start;
-        private bool _ignoreActive;
 
         public ApplicationInsightsSpanBuilder(ApplicationInsightsTracer tracer, string operationName)
         {
@@ -121,17 +125,16 @@ namespace OpenTracing.ApplicationInsights
             if (_references != null && (_ignoreActive || activeSpanContext.IsEmpty()))
                 parentContext = FindBestFittingReference(_references);
             else if (!activeSpanContext.IsEmpty())
-                parentContext = (ApplicationInsightsSpanContext)activeSpanContext;
-
+                parentContext = (ApplicationInsightsSpanContext) activeSpanContext;
         }
 
         private static ApplicationInsightsSpanContext FindBestFittingReference(IReadOnlyList<SpanReference> references)
         {
             foreach (var reference in references)
                 if (reference.ReferenceType.Equals(References.ChildOf))
-                    return (ApplicationInsightsSpanContext)reference.SpanContext;
+                    return (ApplicationInsightsSpanContext) reference.SpanContext;
 
-            return (ApplicationInsightsSpanContext)references.First().SpanContext;
+            return (ApplicationInsightsSpanContext) references.First().SpanContext;
         }
 
         /// <summary>

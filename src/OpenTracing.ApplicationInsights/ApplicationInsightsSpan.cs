@@ -1,17 +1,21 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ApplicationInsightsSpan.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.Tag;
 
 namespace OpenTracing.ApplicationInsights
 {
     /// <inheritdoc />
     /// <summary>
-    /// An Application Insights-specific <see cref="T:OpenTracing.ISpan" /> interface.
+    ///     An Application Insights-specific <see cref="T:OpenTracing.ISpan" /> interface.
     /// </summary>
     public interface IApplicationInsightsSpan : ISpan
     {
@@ -39,18 +43,18 @@ namespace OpenTracing.ApplicationInsights
     }
 
     /// <summary>
-    /// Concrete <see cref="ISpan"/> implementation for Application Insights.
-    /// 
-    /// Contains all metadata needed to be properly recorded by the <see cref="TelemetryClient"/>.
+    ///     Concrete <see cref="ISpan" /> implementation for Application Insights.
+    ///     Contains all metadata needed to be properly recorded by the <see cref="TelemetryClient" />.
     /// </summary>
     public sealed class ApplicationInsightsSpan : IApplicationInsightsSpan
     {
         public static readonly IReadOnlyDictionary<string, string> EmptyTags = new Dictionary<string, string>();
-        private Dictionary<string, string> _tagsActual;
-        private List<Annotation> _annotations;
         private readonly ApplicationInsightsTracer _tracer;
+        private List<Annotation> _annotations;
+        private Dictionary<string, string> _tagsActual;
 
-        public ApplicationInsightsSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext, string operationName, DateTimeOffset start, SpanKind spanKind,
+        public ApplicationInsightsSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
+            string operationName, DateTimeOffset start, SpanKind spanKind,
             Endpoint localEndpoint = null, Dictionary<string, string> tagsActual = null)
         {
             TypedContext = typedContext;
@@ -61,6 +65,16 @@ namespace OpenTracing.ApplicationInsights
             _tagsActual = tagsActual;
             _tracer = tracer;
         }
+
+        /// <summary>
+        ///     The start time of this operation.
+        /// </summary>
+        public DateTimeOffset Started { get; }
+
+        /// <summary>
+        ///     The completion time of this operation.
+        /// </summary>
+        public DateTimeOffset? Finished { get; private set; }
 
         public ISpan SetTag(string key, string value)
         {
@@ -172,16 +186,6 @@ namespace OpenTracing.ApplicationInsights
         public string OperationName { get; private set; }
 
         /// <summary>
-        ///     The start time of this operation.
-        /// </summary>
-        public DateTimeOffset Started { get; }
-
-        /// <summary>
-        ///     The completion time of this operation.
-        /// </summary>
-        public DateTimeOffset? Finished { get; private set; }
-
-        /// <summary>
         ///     The duration of this operation.
         /// </summary>
         public TimeSpan? Duration
@@ -198,7 +202,7 @@ namespace OpenTracing.ApplicationInsights
         public SpanKind SpanKind { get; }
 
         /// <summary>
-        /// Set the remote endpoint involved in this operation.
+        ///     Set the remote endpoint involved in this operation.
         /// </summary>
         /// <param name="remote">The remote endpoint. Can be a client or a server address.</param>
         /// <returns>This span.</returns>

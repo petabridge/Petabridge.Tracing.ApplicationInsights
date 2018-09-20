@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Endpoint.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 
 namespace OpenTracing.ApplicationInsights
 {
@@ -53,7 +57,7 @@ namespace OpenTracing.ApplicationInsights
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj is Endpoint && Equals((Endpoint)obj);
+            return obj is Endpoint && Equals((Endpoint) obj);
         }
 
         public override int GetHashCode()
@@ -80,17 +84,10 @@ namespace OpenTracing.ApplicationInsights
         public override string ToString()
         {
             if (string.IsNullOrEmpty(ServiceName))
-            {
                 return Port.HasValue ? $"{Host}:{Port}" : Host;
-            }
-            else if (!string.IsNullOrEmpty(Host))
-            {
+            if (!string.IsNullOrEmpty(Host))
                 return Port.HasValue ? $"{ServiceName}[{Host}:{Port}]" : $"{ServiceName}[{Host}]";
-            }
-            else
-            {
-                return ServiceName;
-            }
+            return ServiceName;
         }
     }
 }

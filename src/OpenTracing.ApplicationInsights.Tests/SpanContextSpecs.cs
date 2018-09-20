@@ -1,7 +1,11 @@
-using System;
+// -----------------------------------------------------------------------
+// <copyright file="SpanContextSpecs.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
 using FluentAssertions;
 using OpenTracing.ApplicationInsights.Util;
-using OpenTracing.Noop;
 using Xunit;
 using static OpenTracing.ApplicationInsights.Util.ThreadLocalRngIdProvider;
 
@@ -9,13 +13,6 @@ namespace OpenTracing.ApplicationInsights.Tests
 {
     public class SpanContextSpecs
     {
-        [Fact(DisplayName = "root SpanContext should equal itself")]
-        public void RootSpanContextShouldEqualSelf()
-        {
-            var context = new ApplicationInsightsSpanContext(NextId(), NextId());
-            context.Equals(context).Should().BeTrue();
-        }
-
         [Fact(DisplayName = "child SpanContext should equal itself")]
         public void ChildSpanContextShouldEqualSelf()
         {
@@ -29,6 +26,13 @@ namespace OpenTracing.ApplicationInsights.Tests
             var context = NoOpHelpers.NoOpSpan.Context;
             context.IsEmpty().Should().BeTrue();
             context.IsAppInsightsSpan().Should().BeFalse();
+        }
+
+        [Fact(DisplayName = "root SpanContext should equal itself")]
+        public void RootSpanContextShouldEqualSelf()
+        {
+            var context = new ApplicationInsightsSpanContext(NextId(), NextId());
+            context.Equals(context).Should().BeTrue();
         }
     }
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ApplicationInsightsSpanContext.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 
 namespace OpenTracing.ApplicationInsights
@@ -9,15 +15,15 @@ namespace OpenTracing.ApplicationInsights
     public enum SpanKind
     {
         CLIENT,
-        SERVER,
+        SERVER
     }
 
     /// <summary>
-    /// Application Insights operation-specific context.
+    ///     Application Insights operation-specific context.
     /// </summary>
     public sealed class ApplicationInsightsSpanContext : IApplicationInsightsSpanContext
     {
-        public ApplicationInsightsSpanContext(string traceId, string spanId, 
+        public ApplicationInsightsSpanContext(string traceId, string spanId,
             string parentId = null, SpanKind operationType = SpanKind.SERVER)
         {
             TraceId = traceId;
@@ -33,9 +39,10 @@ namespace OpenTracing.ApplicationInsights
 
         /// <inheritdoc />
         /// <summary>
-        /// Refers to the OperationId in Application Insights
+        ///     Refers to the OperationId in Application Insights
         /// </summary>
         public string TraceId { get; }
+
         public string SpanId { get; }
         public string ParentId { get; }
         public SpanKind OperationType { get; }
@@ -44,10 +51,10 @@ namespace OpenTracing.ApplicationInsights
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(TraceId, other.TraceId) 
-                && string.Equals(SpanId, other.SpanId) 
-                && string.Equals(ParentId, other.ParentId) 
-                && OperationType == other.OperationType;
+            return string.Equals(TraceId, other.TraceId)
+                   && string.Equals(SpanId, other.SpanId)
+                   && string.Equals(ParentId, other.ParentId)
+                   && OperationType == other.OperationType;
         }
 
         public override bool Equals(object obj)
@@ -61,7 +68,7 @@ namespace OpenTracing.ApplicationInsights
         {
             unchecked
             {
-                var hashCode = (TraceId != null ? TraceId.GetHashCode() : 0);
+                var hashCode = TraceId != null ? TraceId.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (SpanId != null ? SpanId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ParentId != null ? ParentId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int) OperationType;
@@ -81,18 +88,18 @@ namespace OpenTracing.ApplicationInsights
     }
 
     /// <summary>
-    /// Application Insights-specific <see cref="T:OpenTracing.ISpanContext" />.
+    ///     Application Insights-specific <see cref="T:OpenTracing.ISpanContext" />.
     /// </summary>
     public interface IApplicationInsightsSpanContext : ISpanContext, IEquatable<IApplicationInsightsSpanContext>
     {
         /// <summary>
-        /// The operation_ParentId equivalent in the Application Insights data model.
+        ///     The operation_ParentId equivalent in the Application Insights data model.
         /// </summary>
         string ParentId { get; }
 
         /// <summary>
-        /// Indicates if this is a request or a dependency invocation per
-        /// the Application Insights data model.
+        ///     Indicates if this is a request or a dependency invocation per
+        ///     the Application Insights data model.
         /// </summary>
         SpanKind OperationType { get; }
     }
