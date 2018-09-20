@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.Tag;
 
 namespace OpenTracing.ApplicationInsights
@@ -27,7 +30,7 @@ namespace OpenTracing.ApplicationInsights
 
         string OperationName { get; }
 
-        IReadOnlyDictionary<string, string> Tags { get; }
+        IDictionary<string, string> Tags { get; }
 
         /// <summary>
         ///     The local <see cref="Endpoint" />
@@ -46,14 +49,13 @@ namespace OpenTracing.ApplicationInsights
     ///     Concrete <see cref="ISpan" /> implementation for Application Insights.
     ///     Contains all metadata needed to be properly recorded by the <see cref="TelemetryClient" />.
     /// </summary>
-    public sealed class ApplicationInsightsSpan : IApplicationInsightsSpan
+    public abstract class ApplicationInsightsSpan : IApplicationInsightsSpan
     {
-        public static readonly IReadOnlyDictionary<string, string> EmptyTags = new Dictionary<string, string>();
-        private readonly ApplicationInsightsTracer _tracer;
-        private List<Annotation> _annotations;
-        private Dictionary<string, string> _tagsActual;
+        public static readonly IDictionary<string, string> EmptyTags = new Dictionary<string, string>();
+        protected readonly ApplicationInsightsTracer Tracer;
 
-        public ApplicationInsightsSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
+        protected ApplicationInsightsSpan(ApplicationInsightsTracer tracer,
+            IApplicationInsightsSpanContext typedContext,
             string operationName, DateTimeOffset start, SpanKind spanKind,
             Endpoint localEndpoint = null, Dictionary<string, string> tagsActual = null)
         {
@@ -62,9 +64,9 @@ namespace OpenTracing.ApplicationInsights
             OperationName = operationName;
             Started = start;
             LocalEndpoint = localEndpoint;
-            _tagsActual = tagsActual;
-            _tracer = tracer;
+            Tracer = tracer;
         }
+
 
         /// <summary>
         ///     The start time of this operation.
@@ -76,12 +78,7 @@ namespace OpenTracing.ApplicationInsights
         /// </summary>
         public DateTimeOffset? Finished { get; private set; }
 
-        public ISpan SetTag(string key, string value)
-        {
-            _tagsActual = _tagsActual ?? new Dictionary<string, string>();
-            _tagsActual[key] = value;
-            return this;
-        }
+        public abstract ISpan SetTag(string key, string value);
 
         public ISpan SetTag(string key, bool value)
         {
@@ -120,7 +117,7 @@ namespace OpenTracing.ApplicationInsights
 
         public ISpan Log(IEnumerable<KeyValuePair<string, object>> fields)
         {
-            return Log(_tracer.TimeProvider.Now, fields);
+            return Log(Tracer.TimeProvider.Now, fields);
         }
 
         public ISpan Log(DateTimeOffset timestamp, IEnumerable<KeyValuePair<string, object>> fields)
@@ -130,13 +127,10 @@ namespace OpenTracing.ApplicationInsights
 
         public ISpan Log(string @event)
         {
-            return Log(_tracer.TimeProvider.Now, @event);
+            return Log(Tracer.TimeProvider.Now, @event);
         }
 
-        public ISpan Log(DateTimeOffset timestamp, string @event)
-        {
-            return Annotate(timestamp, @event);
-        }
+        public abstract ISpan Log(DateTimeOffset timestamp, string @event);
 
         public ISpan SetBaggageItem(string key, string value)
         {
@@ -156,7 +150,7 @@ namespace OpenTracing.ApplicationInsights
 
         public void Finish()
         {
-            Finish(_tracer.TimeProvider.Now);
+            Finish(Tracer.TimeProvider.Now);
         }
 
         public void Finish(DateTimeOffset finishTimestamp)
@@ -164,11 +158,11 @@ namespace OpenTracing.ApplicationInsights
             if (!Finished.HasValue)
             {
                 Finished = finishTimestamp;
-                _tracer.Report(this);
+                FinishInternal();
             }
         }
 
-        public IReadOnlyDictionary<string, string> Tags => _tagsActual ?? EmptyTags;
+        public abstract IDictionary<string, string> Tags { get; }
 
         /// <summary>
         ///     The local <see cref="Endpoint" />
@@ -181,7 +175,7 @@ namespace OpenTracing.ApplicationInsights
         public Endpoint RemoteEndpoint { get; private set; }
 
         /// <summary>
-        ///     The name of the operation for this <see cref="ApplicationInsightsSpanBase" />
+        ///     The name of the operation for this <see cref="ApplicationInsightsSpan" />
         /// </summary>
         public string OperationName { get; private set; }
 
@@ -212,16 +206,72 @@ namespace OpenTracing.ApplicationInsights
             return this;
         }
 
+        /// <summary>
+        ///     Template method for completing reporting to Application Insights
+        /// </summary>
+        protected abstract void FinishInternal();
+
         internal static string MergeFields(IEnumerable<KeyValuePair<string, object>> fields)
         {
             return string.Join(" ", fields.Select(entry => entry.Key + ":" + entry.Value));
         }
 
-        internal ISpan Annotate(DateTimeOffset time, string annotationValue)
+        internal static void InitializeTelemetry(IApplicationInsightsSpanContext typedContext, Endpoint localEndpoint,
+            Dictionary<string, string> tagsActual, ITelemetry telemetry)
         {
-            _annotations = _annotations ?? new List<Annotation>();
-            _annotations.Add(new Annotation(time, annotationValue));
+            telemetry.Context.Operation.Id = typedContext.TraceId;
+            telemetry.Context.Operation.ParentId = typedContext.ParentId;
+            telemetry.Context.Location.Ip = localEndpoint?.Host;
+            telemetry.Context.Cloud.RoleInstance = localEndpoint?.Host + localEndpoint?.Port;
+            telemetry.Context.Cloud.RoleName = localEndpoint?.ServiceName;
+
+            // pre-populate all tags
+            if (tagsActual != null)
+                foreach (var tag in tagsActual)
+                    telemetry.Context.Properties[tag.Key] = tag.Value;
+        }
+    }
+
+    /// <inheritdoc />
+    /// <summary>
+    ///     Used to process <see cref="T:Microsoft.ApplicationInsights.DataContracts.DependencyTelemetry" /> events.
+    /// </summary>
+    public sealed class RequestSpan : ApplicationInsightsSpan
+    {
+        private readonly IOperationHolder<RequestTelemetry> _operation;
+
+        public RequestSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
+            string operationName, DateTimeOffset start, SpanKind spanKind, Endpoint localEndpoint = null,
+            Dictionary<string, string> tagsActual = null) : base(tracer, typedContext, operationName, start, spanKind,
+            localEndpoint, tagsActual)
+        {
+            _operation = Tracer.Client.StartOperation<RequestTelemetry>(operationName);
+            _operation.Telemetry.Id = typedContext.SpanId;
+
+            InitializeTelemetry(typedContext, localEndpoint, tagsActual, _operation.Telemetry);
+        }
+
+        public override IDictionary<string, string> Tags => _operation.Telemetry.Properties ?? EmptyTags;
+
+        public override ISpan SetTag(string key, string value)
+        {
+            // guard the trace so we don't collect garbage
+            if (!Finished.HasValue) _operation.Telemetry.Properties[key] = value;
+
             return this;
+        }
+
+        public override ISpan Log(DateTimeOffset timestamp, string @event)
+        {
+            // guard the trace so we don't collect garbage
+            if (!Finished.HasValue) Tracer.Client.Track(new TraceTelemetry {Message = @event, Timestamp = timestamp});
+
+            return this;
+        }
+
+        protected override void FinishInternal()
+        {
+            Tracer.Client.StopOperation(_operation);
         }
     }
 }

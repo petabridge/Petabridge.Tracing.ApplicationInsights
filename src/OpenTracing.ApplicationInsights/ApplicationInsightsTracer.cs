@@ -4,9 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.ApplicationInsights.Propagation;
 using OpenTracing.Propagation;
@@ -27,18 +25,24 @@ namespace OpenTracing.ApplicationInsights
         private readonly IPropagator<ITextMap> _propagator;
 
         public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager,
-            IPropagator<ITextMap> propagator, ITimeProvider timeProvider)
+            IPropagator<ITextMap> propagator, ITimeProvider timeProvider, Endpoint localEndpoint)
         {
             Client = new TelemetryClient(config);
             _config = config;
             ScopeManager = scopeManager;
             _propagator = propagator;
             TimeProvider = timeProvider;
+            LocalEndpoint = localEndpoint;
         }
 
         public ITimeProvider TimeProvider { get; }
 
         public TelemetryClient Client { get; }
+
+        /// <summary>
+        ///     The local endpoint for the node recording traces
+        /// </summary>
+        public Endpoint LocalEndpoint { get; }
 
         public ISpanBuilder BuildSpan(string operationName)
         {
@@ -47,37 +51,29 @@ namespace OpenTracing.ApplicationInsights
 
         public void Inject<TCarrier>(ISpanContext spanContext, IFormat<TCarrier> format, TCarrier carrier)
         {
-            throw new NotImplementedException();
+            if ((format == BuiltinFormats.TextMap || format == BuiltinFormats.HttpHeaders) &&
+                carrier is ITextMap textMap)
+            {
+                if (spanContext is ApplicationInsightsSpanContext appInsightsContext)
+                    _propagator.Inject(appInsightsContext, textMap);
+                return;
+            }
+
+            throw new ApplicationInsightsFormatException(
+                $"Unrecognized carrier format [{format}]. Only ITextMap is supported by this driver.");
         }
 
         public ISpanContext Extract<TCarrier>(IFormat<TCarrier> format, TCarrier carrier)
         {
-            throw new NotImplementedException();
+            if ((format == BuiltinFormats.TextMap || format == BuiltinFormats.HttpHeaders) &&
+                carrier is ITextMap textMap)
+                return _propagator.Extract(textMap);
+
+            throw new ApplicationInsightsFormatException(
+                $"Unrecognized carrier format [{format}]. Only ITextMap is supported by this driver.");
         }
 
         public IScopeManager ScopeManager { get; }
         public ISpan ActiveSpan => ScopeManager.Active?.Span ?? NoOpSpan;
-
-        internal void Report(IApplicationInsightsSpan span)
-        {
-            switch (span.SpanKind)
-            {
-                case SpanKind.CLIENT:
-                    var dTelemetry = new DependencyTelemetry
-                    {
-                        Id = span.TypedContext.SpanId,
-                        Duration = span.Duration ?? TimeSpan.Zero,
-                        Name = span.OperationName
-                    };
-
-                    // copy properties into tags
-                    foreach (var property in span.Tags) dTelemetry.Properties[property.Key] = property.Value;
-
-                    // set the correlation IDs
-                    dTelemetry.Context.Operation.ParentId = span.TypedContext.ParentId;
-
-                    break;
-            }
-        }
     }
 }

@@ -19,11 +19,11 @@ namespace OpenTracing.ApplicationInsights
     public sealed class ApplicationInsightsSpanBuilder : ISpanBuilder
     {
         private readonly string _operationName;
+        private readonly SpanKind _spanKind = SpanKind.SERVER;
         private readonly ApplicationInsightsTracer _tracer;
         private bool _ignoreActive;
         private Dictionary<string, string> _initialTags;
         private List<SpanReference> _references;
-        private SpanKind _spanKind = SpanKind.SERVER;
         private DateTimeOffset? _start;
 
         public ApplicationInsightsSpanBuilder(ApplicationInsightsTracer tracer, string operationName)
@@ -126,6 +126,24 @@ namespace OpenTracing.ApplicationInsights
                 parentContext = FindBestFittingReference(_references);
             else if (!activeSpanContext.IsEmpty())
                 parentContext = (ApplicationInsightsSpanContext) activeSpanContext;
+
+            var context = new ApplicationInsightsSpanContext(
+                parentContext != null ? parentContext.TraceId : ThreadLocalRngIdProvider.NextId(),
+                ThreadLocalRngIdProvider.NextId(), parentContext?.SpanId);
+            switch (_spanKind)
+            {
+                case SpanKind.SERVER:
+                    return new RequestSpan(_tracer, context, _operationName,
+                        _start ?? _tracer.TimeProvider.Now,
+                        _spanKind, _tracer.LocalEndpoint, _initialTags);
+                case SpanKind.CLIENT:
+                    return new DependencySpan(_tracer, context, _operationName,
+                        _start ?? _tracer.TimeProvider.Now,
+                        _spanKind, _tracer.LocalEndpoint, _initialTags);
+            }
+
+            throw new InvalidOperationException(
+                $"Unrecognized SpanKind: [{_spanKind}]. Accepted values are [{string.Join(",", Enum.GetNames(typeof(SpanKind)))}]");
         }
 
         private static ApplicationInsightsSpanContext FindBestFittingReference(IReadOnlyList<SpanReference> references)
