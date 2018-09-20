@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.ApplicationInsights.Propagation;
 using OpenTracing.Propagation;
@@ -49,5 +51,24 @@ namespace OpenTracing.ApplicationInsights
 
         public IScopeManager ScopeManager { get; }
         public ISpan ActiveSpan => ScopeManager.Active?.Span ?? NoOpSpan;
+
+        internal void Report(IApplicationInsightsSpan span)
+        {
+            ITelemetry telemetry = null;
+            switch (span.SpanKind)
+            {
+                case SpanKind.CLIENT:
+                    telemetry = new DependencyTelemetry()
+                    {
+                        Id = span.TypedContext.SpanId,
+                        Duration = span.Duration ?? TimeSpan.Zero,
+                        Name = span.OperationName,
+                    };
+
+                    break;
+            }
+
+            Client.Track(telemetry);
+        }
     }
 }

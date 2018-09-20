@@ -9,6 +9,9 @@ using OpenTracing.Tag;
 
 namespace OpenTracing.ApplicationInsights
 {
+    /// <summary>
+    /// Builder interface for creating <see cref="IApplicationInsightsSpan"/> instances.
+    /// </summary>
     public sealed class ApplicationInsightsSpanBuilder : ISpanBuilder
     {
         private readonly ApplicationInsightsTracer _tracer;
@@ -120,7 +123,6 @@ namespace OpenTracing.ApplicationInsights
             else if (!activeSpanContext.IsEmpty())
                 parentContext = (ApplicationInsightsSpanContext)activeSpanContext;
 
-           
         }
 
         private static ApplicationInsightsSpanContext FindBestFittingReference(IReadOnlyList<SpanReference> references)

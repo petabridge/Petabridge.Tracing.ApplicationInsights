@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -17,27 +18,44 @@ namespace OpenTracing.ApplicationInsights
         IApplicationInsightsSpanContext TypedContext { get; }
 
         SpanKind SpanKind { get; }
+
+        TimeSpan? Duration { get; }
+
+        string OperationName { get; }
+
+        IApplicationInsightsSpan SetRemoteEndpoint(Endpoint remote);
     }
 
-    public abstract class ApplicationInsightsSpanBase : IApplicationInsightsSpan
+    /// <summary>
+    /// Concrete <see cref="ISpan"/> implementation for Application Insights.
+    /// 
+    /// Contains all metadata needed to be properly recorded by the <see cref="TelemetryClient"/>.
+    /// </summary>
+    public sealed class ApplicationInsightsSpan : IApplicationInsightsSpan
     {
         public static readonly IReadOnlyDictionary<string, string> EmptyTags = new Dictionary<string, string>();
-        protected Dictionary<string, string> _tags;
-        protected readonly ApplicationInsightsTracer Tracer;
+        private Dictionary<string, string> _tagsActual;
+        private List<Annotation> _annotations;
+        private readonly ApplicationInsightsTracer _tracer;
 
-        protected ApplicationInsightsSpanBase(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext, string operationName, DateTimeOffset start, SpanKind spanKind,
-            Endpoint localEndpoint = null, Dictionary<string, string> tags = null)
+        public ApplicationInsightsSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext, string operationName, DateTimeOffset start, SpanKind spanKind,
+            Endpoint localEndpoint = null, Dictionary<string, string> tagsActual = null)
         {
             TypedContext = typedContext;
             SpanKind = spanKind;
             OperationName = operationName;
             Started = start;
             LocalEndpoint = localEndpoint;
-            _tags = tags;
-            Tracer = tracer;
+            _tagsActual = tagsActual;
+            _tracer = tracer;
         }
 
-        public abstract ISpan SetTag(string key, string value);
+        public ISpan SetTag(string key, string value)
+        {
+            _tagsActual = _tagsActual ?? new Dictionary<string, string>();
+            _tagsActual[key] = value;
+            return this;
+        }
 
         public ISpan SetTag(string key, bool value)
         {
@@ -76,20 +94,23 @@ namespace OpenTracing.ApplicationInsights
 
         public ISpan Log(IEnumerable<KeyValuePair<string, object>> fields)
         {
-            throw new NotImplementedException();
+            return Log(_tracer.TimeProvider.Now, fields);
         }
 
         public ISpan Log(DateTimeOffset timestamp, IEnumerable<KeyValuePair<string, object>> fields)
         {
-            throw new NotImplementedException();
+            return Log(timestamp, MergeFields(fields));
         }
 
         public ISpan Log(string @event)
         {
-            throw new NotImplementedException();
+            return Log(_tracer.TimeProvider.Now, @event);
         }
 
-        public abstract ISpan Log(DateTimeOffset timestamp, string @event);
+        public ISpan Log(DateTimeOffset timestamp, string @event)
+        {
+            return Annotate(timestamp, @event);
+        }
 
         public ISpan SetBaggageItem(string key, string value)
         {
@@ -109,12 +130,19 @@ namespace OpenTracing.ApplicationInsights
 
         public void Finish()
         {
-            Finish(Tracer.TimeProvider.Now);
+            Finish(_tracer.TimeProvider.Now);
         }
 
-        public abstract void Finish(DateTimeOffset finishTimestamp);
+        public void Finish(DateTimeOffset finishTimestamp)
+        {
+            if (!Finished.HasValue)
+            {
+                Finished = finishTimestamp;
+                _tracer.Report(this);
+            }
+        }
 
-        public IReadOnlyDictionary<string, string> Tags => _tags ?? EmptyTags;
+        public IReadOnlyDictionary<string, string> Tags => _tagsActual ?? EmptyTags;
 
         /// <summary>
         ///     The local <see cref="Endpoint" />
@@ -156,5 +184,28 @@ namespace OpenTracing.ApplicationInsights
         public ISpanContext Context => TypedContext;
         public IApplicationInsightsSpanContext TypedContext { get; }
         public SpanKind SpanKind { get; }
+
+        /// <summary>
+        /// Set the remote endpoint involved in this operation.
+        /// </summary>
+        /// <param name="remote">The remote endpoint. Can be a client or a server address.</param>
+        /// <returns>This span.</returns>
+        public IApplicationInsightsSpan SetRemoteEndpoint(Endpoint remote)
+        {
+            RemoteEndpoint = remote;
+            return this;
+        }
+
+        internal static string MergeFields(IEnumerable<KeyValuePair<string, object>> fields)
+        {
+            return string.Join(" ", fields.Select(entry => entry.Key + ":" + entry.Value));
+        }
+
+        internal ISpan Annotate(DateTimeOffset time, string annotationValue)
+        {
+            _annotations = _annotations ?? new List<Annotation>();
+            _annotations.Add(new Annotation(time, annotationValue));
+            return this;
+        }
     }
 }
