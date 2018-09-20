@@ -26,9 +26,11 @@ namespace OpenTracing.ApplicationInsights
         private readonly TelemetryConfiguration _config;
         private readonly IPropagator<ITextMap> _propagator;
 
-        public ApplicationInsightsTracer(TelemetryConfiguration config, Endpoint localEndpoint = null) : this(config, new AsyncLocalScopeManager(),
+        public ApplicationInsightsTracer(TelemetryConfiguration config, Endpoint localEndpoint = null) : this(config,
+            new AsyncLocalScopeManager(),
             new B3Propagator(), new DateTimeOffsetTimeProvider(), localEndpoint)
-        { }
+        {
+        }
 
         public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager,
             IPropagator<ITextMap> propagator, ITimeProvider timeProvider, Endpoint localEndpoint)
