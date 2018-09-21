@@ -4,9 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using static OpenTracing.ApplicationInsights.Util.NoOpHelpers;
+using OpenTracing;
 
-namespace OpenTracing.ApplicationInsights.Util
+namespace Petabridge.Tracing.ApplicationInsights.Util
 {
     /// <summary>
     ///     Extension methods for working with <see cref="ISpanContext" />
@@ -20,7 +20,7 @@ namespace OpenTracing.ApplicationInsights.Util
         /// <returns><c>true</c> if the span is empty, <c>false</c> otherwise.</returns>
         public static bool IsEmpty(this ISpanContext context)
         {
-            return context == null || NoOpSpan.Context.Equals(context);
+            return context == null || NoOpHelpers.NoOpSpan.Context.Equals(context);
         }
 
         /// <summary>

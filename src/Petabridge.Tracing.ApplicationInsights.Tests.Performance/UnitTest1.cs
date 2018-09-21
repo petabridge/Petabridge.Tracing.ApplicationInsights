@@ -6,7 +6,7 @@
 
 using NBench;
 
-namespace OpenTracing.ApplicationInsights.Tests.Performance
+namespace Petabridge.Tracing.ApplicationInsights.Tests.Performance
 {
     public class UnitTest1
     {

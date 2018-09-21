@@ -6,7 +6,7 @@
 
 using System;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <summary>
     ///     Thrown when we have a propagation header or some other data member in an invalid state.

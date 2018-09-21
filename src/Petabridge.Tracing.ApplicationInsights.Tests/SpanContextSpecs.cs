@@ -5,18 +5,17 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using OpenTracing.ApplicationInsights.Util;
+using Petabridge.Tracing.ApplicationInsights.Util;
 using Xunit;
-using static OpenTracing.ApplicationInsights.Util.ThreadLocalRngIdProvider;
 
-namespace OpenTracing.ApplicationInsights.Tests
+namespace Petabridge.Tracing.ApplicationInsights.Tests
 {
     public class SpanContextSpecs
     {
         [Fact(DisplayName = "child SpanContext should equal itself")]
         public void ChildSpanContextShouldEqualSelf()
         {
-            var context = new ApplicationInsightsSpanContext(NextId(), NextId(), NextId());
+            var context = new ApplicationInsightsSpanContext(ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId());
             context.Equals(context).Should().BeTrue();
         }
 
@@ -31,7 +30,7 @@ namespace OpenTracing.ApplicationInsights.Tests
         [Fact(DisplayName = "root SpanContext should equal itself")]
         public void RootSpanContextShouldEqualSelf()
         {
-            var context = new ApplicationInsightsSpanContext(NextId(), NextId());
+            var context = new ApplicationInsightsSpanContext(ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId());
             context.Equals(context).Should().BeTrue();
         }
     }

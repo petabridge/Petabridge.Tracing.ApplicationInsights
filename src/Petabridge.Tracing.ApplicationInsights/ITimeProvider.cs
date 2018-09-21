@@ -6,7 +6,7 @@
 
 using System;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <summary>
     ///     Abstraction for providing time, so we can use virtual time and other fun stuff

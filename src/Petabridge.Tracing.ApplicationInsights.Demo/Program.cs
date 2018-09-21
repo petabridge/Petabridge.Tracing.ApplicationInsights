@@ -8,8 +8,9 @@ using System;
 using Akka.Actor;
 using Akka.Event;
 using Microsoft.ApplicationInsights.Extensibility;
+using OpenTracing;
 
-namespace OpenTracing.ApplicationInsights.Demo
+namespace Petabridge.Tracing.ApplicationInsights.Demo
 {
     public class TracerActor : ReceiveActor
     {

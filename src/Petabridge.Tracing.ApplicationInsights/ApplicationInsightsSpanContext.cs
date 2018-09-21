@@ -6,8 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using OpenTracing;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <summary>
     ///     Describes the type of span being used.

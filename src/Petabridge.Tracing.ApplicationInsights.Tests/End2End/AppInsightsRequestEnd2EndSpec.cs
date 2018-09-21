@@ -7,9 +7,8 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
-using static OpenTracing.ApplicationInsights.Tests.End2End.ExponentialBackoff;
 
-namespace OpenTracing.ApplicationInsights.Tests.End2End
+namespace Petabridge.Tracing.ApplicationInsights.Tests.End2End
 {
     public class AppInsightsRequestEnd2EndSpec : IClassFixture<AppInsightsFixture>
     {
@@ -45,7 +44,7 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
             }
 
             // give the span a chance to be uploaded and processed
-            await AwaitAssert(async () =>
+            await ExponentialBackoff.AwaitAssert(async () =>
             {
                 var queryResult = await _fixture.QueryOperationsForTraceId(traceId);
                 queryResult.isSuccess.Should().BeTrue();
@@ -75,7 +74,7 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
             }
 
             // give the span a chance to be uploaded and processed
-            await AwaitAssert(async () =>
+            await ExponentialBackoff.AwaitAssert(async () =>
             {
                 var queryResult = await _fixture.QueryOperationsForTraceId(traceId);
                 queryResult.isSuccess.Should().BeTrue();
@@ -103,7 +102,7 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
             }
 
             // give the span a chance to be uploaded and processed
-            await AwaitAssert(async () =>
+            await ExponentialBackoff.AwaitAssert(async () =>
             {
                 var queryResult = await _fixture.QueryOperationsForTraceId(traceId);
                 queryResult.isSuccess.Should().BeTrue();

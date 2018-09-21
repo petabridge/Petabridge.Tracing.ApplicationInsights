@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OpenTracing.ApplicationInsights.Tests.End2End
+namespace Petabridge.Tracing.ApplicationInsights.Tests.End2End
 {
     /// <summary>
     ///     Helper class for making life easier with <see cref="ExponentialBackOffAssert" />

@@ -11,9 +11,10 @@ using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
+using OpenTracing;
 using OpenTracing.Tag;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <inheritdoc />
     /// <summary>

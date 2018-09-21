@@ -6,7 +6,7 @@
 
 using OpenTracing.Propagation;
 
-namespace OpenTracing.ApplicationInsights.Propagation
+namespace Petabridge.Tracing.ApplicationInsights.Propagation
 {
     /// <inheritdoc />
     /// <summary>

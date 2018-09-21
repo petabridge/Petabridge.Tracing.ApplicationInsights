@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace OpenTracing.ApplicationInsights.Tests.End2End
+namespace Petabridge.Tracing.ApplicationInsights.Tests.End2End
 {
     public static class AppInsightsDeserializer
     {

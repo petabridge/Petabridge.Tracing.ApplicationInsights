@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
+using OpenTracing;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <inheritdoc />
     /// <summary>

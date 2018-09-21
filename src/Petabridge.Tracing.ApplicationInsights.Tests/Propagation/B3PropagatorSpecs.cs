@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.Propagation;
+using Petabridge.Tracing.ApplicationInsights.Util;
 using Xunit;
-using static OpenTracing.ApplicationInsights.Util.ThreadLocalRngIdProvider;
 
-namespace OpenTracing.ApplicationInsights.Tests.Propagation
+namespace Petabridge.Tracing.ApplicationInsights.Tests.Propagation
 {
     public class B3PropagatorSpecs
     {
@@ -26,7 +26,7 @@ namespace OpenTracing.ApplicationInsights.Tests.Propagation
         [Fact(DisplayName = "Should be able to extract and inject spans via B3 headers")]
         public void ShouldExtractAndInjectSpansViaB3()
         {
-            var context = new ApplicationInsightsSpanContext(NextId(), NextId(), NextId());
+            var context = new ApplicationInsightsSpanContext(ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId());
             var carrier = new Dictionary<string, string>();
 
             Tracer.Inject(context, BuiltinFormats.HttpHeaders, new TextMapInjectAdapter(carrier));
@@ -40,7 +40,7 @@ namespace OpenTracing.ApplicationInsights.Tests.Propagation
         [Fact(DisplayName = "Should be able to extract and inject spans withour ParentIds via B3 headers")]
         public void ShouldExtractAndInjectSpansWithoutParentsViaB3()
         {
-            var context = new ApplicationInsightsSpanContext(NextId(), NextId());
+            var context = new ApplicationInsightsSpanContext(ThreadLocalRngIdProvider.NextId(), ThreadLocalRngIdProvider.NextId());
             var carrier = new Dictionary<string, string>();
 
             Tracer.Inject(context, BuiltinFormats.HttpHeaders, new TextMapInjectAdapter(carrier));

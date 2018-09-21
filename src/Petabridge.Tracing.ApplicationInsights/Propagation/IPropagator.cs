@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace OpenTracing.ApplicationInsights.Propagation
+namespace Petabridge.Tracing.ApplicationInsights.Propagation
 {
     /// <summary>
     ///     Used to inject and extract <see cref="ApplicationInsightsSpanContext" /> instances based on supported,

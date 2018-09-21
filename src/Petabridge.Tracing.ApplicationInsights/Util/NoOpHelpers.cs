@@ -4,9 +4,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using OpenTracing;
 using OpenTracing.Noop;
 
-namespace OpenTracing.ApplicationInsights.Util
+namespace Petabridge.Tracing.ApplicationInsights.Util
 {
     /// <summary>
     ///     INTERNAL API

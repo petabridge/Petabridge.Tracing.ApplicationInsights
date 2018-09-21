@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using OpenTracing.ApplicationInsights.Util;
+using OpenTracing;
 using OpenTracing.Tag;
+using Petabridge.Tracing.ApplicationInsights.Util;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <summary>
     ///     An Application Insights <see cref="ISpanBuilder" />

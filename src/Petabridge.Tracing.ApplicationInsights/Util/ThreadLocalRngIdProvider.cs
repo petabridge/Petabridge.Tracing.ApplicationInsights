@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace OpenTracing.ApplicationInsights.Util
+namespace Petabridge.Tracing.ApplicationInsights.Util
 {
     /// <summary>
     ///     INTERNAL API.

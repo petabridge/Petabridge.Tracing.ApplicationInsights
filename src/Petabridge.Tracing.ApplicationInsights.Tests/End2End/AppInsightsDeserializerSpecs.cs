@@ -8,7 +8,7 @@ using System.IO;
 using FluentAssertions;
 using Xunit;
 
-namespace OpenTracing.ApplicationInsights.Tests.End2End
+namespace Petabridge.Tracing.ApplicationInsights.Tests.End2End
 {
     /// <summary>
     ///     Sanity checks for ensuring that <see cref="AppInsightsDeserializer" />

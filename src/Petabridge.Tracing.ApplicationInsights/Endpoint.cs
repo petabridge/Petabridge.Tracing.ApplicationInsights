@@ -6,7 +6,7 @@
 
 using System;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <inheritdoc />
     /// <summary>

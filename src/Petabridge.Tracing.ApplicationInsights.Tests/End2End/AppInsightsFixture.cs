@@ -12,7 +12,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace OpenTracing.ApplicationInsights.Tests.End2End
+namespace Petabridge.Tracing.ApplicationInsights.Tests.End2End
 {
     public class AppInsightsFixture : IDisposable
     {

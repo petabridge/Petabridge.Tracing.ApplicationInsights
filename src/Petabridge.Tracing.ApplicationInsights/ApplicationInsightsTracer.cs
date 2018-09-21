@@ -6,13 +6,13 @@
 
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
-using OpenTracing.ApplicationInsights.Propagation;
-using OpenTracing.ApplicationInsights.Util;
+using OpenTracing;
 using OpenTracing.Propagation;
 using OpenTracing.Util;
-using static OpenTracing.ApplicationInsights.Util.NoOpHelpers;
+using Petabridge.Tracing.ApplicationInsights.Propagation;
+using Petabridge.Tracing.ApplicationInsights.Util;
 
-namespace OpenTracing.ApplicationInsights
+namespace Petabridge.Tracing.ApplicationInsights
 {
     /// <summary>
     ///     Interface describing behavior of the Application Insights <see cref="ITracer" /> implementation.
@@ -106,6 +106,6 @@ namespace OpenTracing.ApplicationInsights
         }
 
         public IScopeManager ScopeManager { get; }
-        public ISpan ActiveSpan => ScopeManager.Active?.Span ?? NoOpSpan;
+        public ISpan ActiveSpan => ScopeManager.Active?.Span ?? NoOpHelpers.NoOpSpan;
     }
 }
