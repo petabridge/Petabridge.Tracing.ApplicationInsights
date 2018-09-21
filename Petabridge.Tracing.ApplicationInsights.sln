@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTracing.ApplicationInsights", "src\OpenTracing.ApplicationInsights\OpenTracing.ApplicationInsights.csproj", "{E945AABA-2779-41E8-9B43-8898FFD64F22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petabridge.Tracing.ApplicationInsights", "src\Petabridge.Tracing.ApplicationInsights\Petabridge.Tracing.ApplicationInsights.csproj", "{E945AABA-2779-41E8-9B43-8898FFD64F22}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTracing.ApplicationInsights.Tests", "src\OpenTracing.ApplicationInsights.Tests\OpenTracing.ApplicationInsights.Tests.csproj", "{0F9B9BC6-9F86-40E8-BA9B-D27BF3AC7970}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petabridge.Tracing.ApplicationInsights.Tests", "src\Petabridge.Tracing.ApplicationInsights.Tests\Petabridge.Tracing.ApplicationInsights.Tests.csproj", "{0F9B9BC6-9F86-40E8-BA9B-D27BF3AC7970}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTracing.ApplicationInsights.Tests.Performance", "src\OpenTracing.ApplicationInsights.Tests.Performance\OpenTracing.ApplicationInsights.Tests.Performance.csproj", "{CAE7CA7C-0D0C-4FDA-BDE9-BE16A27343EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petabridge.Tracing.ApplicationInsights.Tests.Performance", "src\Petabridge.Tracing.ApplicationInsights.Tests.Performance\Petabridge.Tracing.ApplicationInsights.Tests.Performance.csproj", "{CAE7CA7C-0D0C-4FDA-BDE9-BE16A27343EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{79D71264-186B-4F62-8930-35DD9ECCAF3B}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{79D71264
 		build.sh = build.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTracing.ApplicationInsights.Demo", "src\OpenTracing.ApplicationInsights.Demo\OpenTracing.ApplicationInsights.Demo.csproj", "{BEED3332-D678-4CA8-AE00-56BE4D57CA16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petabridge.Tracing.ApplicationInsights.Demo", "src\Petabridge.Tracing.ApplicationInsights.Demo\Petabridge.Tracing.ApplicationInsights.Demo.csproj", "{BEED3332-D678-4CA8-AE00-56BE4D57CA16}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{48512887-AB9D-4037-A416-57A3B0ECC43A}"
 EndProject

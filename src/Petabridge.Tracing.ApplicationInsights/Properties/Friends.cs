@@ -6,4 +6,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("OpenTracing.ApplicationInsights.Tests")]
+[assembly: InternalsVisibleTo("Petabridge.Tracing.ApplicationInsights.Tests")]

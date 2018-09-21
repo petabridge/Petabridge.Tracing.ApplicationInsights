@@ -6,8 +6,9 @@
     <PackageReleaseNotes>First release</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
-    <PackageProjectUrl>https://github.com/petabridge/OpenTracing.ApplicationInsights</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/petabridge/OpenTracing.ApplicationInsights/blob/dev/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/blob/dev/LICENSE</PackageLicenseUrl>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

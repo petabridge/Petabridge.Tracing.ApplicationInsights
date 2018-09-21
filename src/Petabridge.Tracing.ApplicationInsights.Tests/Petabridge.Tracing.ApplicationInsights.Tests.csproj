@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="End2End\appInsightsResponse.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="End2End\appInsightsResponse.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -24,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTracing.ApplicationInsights\OpenTracing.ApplicationInsights.csproj" />
+    <ProjectReference Include="..\Petabridge.Tracing.ApplicationInsights\Petabridge.Tracing.ApplicationInsights.csproj" />
   </ItemGroup>
 
 </Project>

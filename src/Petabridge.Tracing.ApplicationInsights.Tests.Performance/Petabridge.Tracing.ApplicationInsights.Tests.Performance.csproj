@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTracing.ApplicationInsights\OpenTracing.ApplicationInsights.csproj" />
+    <ProjectReference Include="..\Petabridge.Tracing.ApplicationInsights\Petabridge.Tracing.ApplicationInsights.csproj" />
   </ItemGroup>
 
 </Project>
