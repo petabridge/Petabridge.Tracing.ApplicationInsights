@@ -14,16 +14,29 @@ using OpenTracing.Tag;
 namespace OpenTracing.ApplicationInsights
 {
     /// <summary>
+    ///     An Application Insights <see cref="ISpanBuilder" />
+    /// </summary>
+    public interface IApplicationInsightsSpanBuilder : ISpanBuilder
+    {
+        /// <summary>
+        ///     Specifies what type of request we're recording into AppInsights.
+        /// </summary>
+        /// <param name="kind">The request type.</param>
+        /// <returns>The current <see cref="IApplicationInsightsSpanBuilder" /></returns>
+        IApplicationInsightsSpanBuilder WithSpanKind(SpanKind kind);
+    }
+
+    /// <summary>
     ///     Builder interface for creating <see cref="IApplicationInsightsSpan" /> instances.
     /// </summary>
-    public sealed class ApplicationInsightsSpanBuilder : ISpanBuilder
+    public sealed class ApplicationInsightsSpanBuilder : IApplicationInsightsSpanBuilder
     {
         private readonly string _operationName;
-        private readonly SpanKind _spanKind = SpanKind.SERVER;
         private readonly ApplicationInsightsTracer _tracer;
         private bool _ignoreActive;
         private Dictionary<string, string> _initialTags;
         private List<SpanReference> _references;
+        private SpanKind _spanKind = SpanKind.SERVER;
         private DateTimeOffset? _start;
 
         public ApplicationInsightsSpanBuilder(ApplicationInsightsTracer tracer, string operationName)
@@ -144,6 +157,12 @@ namespace OpenTracing.ApplicationInsights
 
             throw new InvalidOperationException(
                 $"Unrecognized SpanKind: [{_spanKind}]. Accepted values are [{string.Join(",", Enum.GetNames(typeof(SpanKind)))}]");
+        }
+
+        public IApplicationInsightsSpanBuilder WithSpanKind(SpanKind kind)
+        {
+            _spanKind = kind;
+            return this;
         }
 
         private static ApplicationInsightsSpanContext FindBestFittingReference(IReadOnlyList<SpanReference> references)

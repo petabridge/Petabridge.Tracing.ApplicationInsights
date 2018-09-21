@@ -17,6 +17,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{79D71264
 		build.sh = build.sh
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTracing.ApplicationInsights.Demo", "src\OpenTracing.ApplicationInsights.Demo\OpenTracing.ApplicationInsights.Demo.csproj", "{BEED3332-D678-4CA8-AE00-56BE4D57CA16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{48512887-AB9D-4037-A416-57A3B0ECC43A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,9 +39,16 @@ Global
 		{CAE7CA7C-0D0C-4FDA-BDE9-BE16A27343EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAE7CA7C-0D0C-4FDA-BDE9-BE16A27343EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAE7CA7C-0D0C-4FDA-BDE9-BE16A27343EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEED3332-D678-4CA8-AE00-56BE4D57CA16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEED3332-D678-4CA8-AE00-56BE4D57CA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEED3332-D678-4CA8-AE00-56BE4D57CA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEED3332-D678-4CA8-AE00-56BE4D57CA16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEED3332-D678-4CA8-AE00-56BE4D57CA16} = {48512887-AB9D-4037-A416-57A3B0ECC43A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B99E6BB8-642A-4A68-86DF-69567CBA700A}

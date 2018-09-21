@@ -7,11 +7,35 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing.ApplicationInsights.Propagation;
+using OpenTracing.ApplicationInsights.Util;
 using OpenTracing.Propagation;
+using OpenTracing.Util;
 using static OpenTracing.ApplicationInsights.Util.NoOpHelpers;
 
 namespace OpenTracing.ApplicationInsights
 {
+    /// <summary>
+    ///     Interface describing behavior of the Application Insights <see cref="ITracer" /> implementation.
+    /// </summary>
+    public interface IApplicationInsightsTracer : ITracer
+    {
+        ITimeProvider TimeProvider { get; }
+        TelemetryClient Client { get; }
+
+        /// <summary>
+        ///     The local endpoint for the node recording traces
+        /// </summary>
+        Endpoint LocalEndpoint { get; }
+
+        /// <summary>
+        ///     Hides the <see cref="ITracer.BuildSpan" /> operation so we can
+        ///     return a typed <see cref="IApplicationInsightsSpanBuilder" />.
+        /// </summary>
+        /// <param name="operationName">The name of the current operation.</param>
+        /// <returns>A new <see cref="IApplicationInsightsSpanBuilder" /> instance.</returns>
+        new IApplicationInsightsSpanBuilder BuildSpan(string operationName);
+    }
+
     /// <summary>
     ///     OpenTracing <see cref="ITracer" /> implementation built specifically for use with Microsoft Application Insights.
     /// </summary>
@@ -19,10 +43,16 @@ namespace OpenTracing.ApplicationInsights
     ///     Follows the guidelines for adapting the Application Insights data model to OpenTracing here:
     ///     https://docs.microsoft.com/en-us/azure/application-insights/application-insights-correlation#open-tracing-and-application-insights
     /// </remarks>
-    public sealed class ApplicationInsightsTracer : ITracer
+    public sealed class ApplicationInsightsTracer : IApplicationInsightsTracer
     {
         private readonly TelemetryConfiguration _config;
         private readonly IPropagator<ITextMap> _propagator;
+
+        public ApplicationInsightsTracer(TelemetryConfiguration config, Endpoint localEndpoint = null) : this(config,
+            new AsyncLocalScopeManager(),
+            new B3Propagator(), new DateTimeOffsetTimeProvider(), localEndpoint)
+        {
+        }
 
         public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager,
             IPropagator<ITextMap> propagator, ITimeProvider timeProvider, Endpoint localEndpoint)
@@ -39,14 +69,16 @@ namespace OpenTracing.ApplicationInsights
 
         public TelemetryClient Client { get; }
 
-        /// <summary>
-        ///     The local endpoint for the node recording traces
-        /// </summary>
         public Endpoint LocalEndpoint { get; }
 
-        public ISpanBuilder BuildSpan(string operationName)
+        public IApplicationInsightsSpanBuilder BuildSpan(string operationName)
         {
             return new ApplicationInsightsSpanBuilder(this, operationName);
+        }
+
+        ISpanBuilder ITracer.BuildSpan(string operationName)
+        {
+            return BuildSpan(operationName);
         }
 
         public void Inject<TCarrier>(ISpanContext spanContext, IFormat<TCarrier> format, TCarrier carrier)

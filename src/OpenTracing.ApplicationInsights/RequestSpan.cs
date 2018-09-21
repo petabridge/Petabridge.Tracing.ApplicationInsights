@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="DependencySpan.cs" company="Petabridge, LLC">
+// <copyright file="RequestSpan.cs" company="Petabridge, LLC">
 //      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
 // </copyright>
 // -----------------------------------------------------------------------
@@ -16,17 +16,16 @@ namespace OpenTracing.ApplicationInsights
     /// <summary>
     ///     Used to process <see cref="T:Microsoft.ApplicationInsights.DataContracts.DependencyTelemetry" /> events.
     /// </summary>
-    public sealed class DependencySpan : ApplicationInsightsSpan
+    public sealed class RequestSpan : ApplicationInsightsSpan
     {
-        private IOperationHolder<DependencyTelemetry> _operation;
+        private IOperationHolder<RequestTelemetry> _operation;
 
-        public DependencySpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
+        public RequestSpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
             string operationName, DateTimeOffset start, SpanKind spanKind, Endpoint localEndpoint = null,
-            Dictionary<string, string> tagsActual = null)
-            : base(tracer, typedContext, operationName, start, spanKind, localEndpoint, tagsActual)
+            Dictionary<string, string> tagsActual = null) : base(tracer, typedContext, operationName, start, spanKind,
+            localEndpoint, tagsActual)
         {
-            var telemetry = new DependencyTelemetry {Id = typedContext.SpanId, Name = operationName};
-
+            var telemetry = new RequestTelemetry {Id = typedContext.SpanId, Name = operationName};
             InitializeTelemetry(typedContext, localEndpoint, tagsActual, telemetry);
 
             _operation = Tracer.Client.StartOperation(telemetry);

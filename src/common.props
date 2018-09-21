@@ -3,8 +3,9 @@
     <Copyright>Copyright © 2015-2018 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
     <VersionPrefix>0.1.0</VersionPrefix>
-    <PackageReleaseNotes>Placeholder</PackageReleaseNotes>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageIconUrl>
+    </PackageIconUrl>
     <PackageProjectUrl>https://github.com/petabridge/OpenTracing.ApplicationInsights</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/petabridge/OpenTracing.ApplicationInsights/blob/dev/LICENSE</PackageLicenseUrl>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
