@@ -4,9 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
+using static OpenTracing.ApplicationInsights.Tests.End2End.ExponentialBackoff;
 
 namespace OpenTracing.ApplicationInsights.Tests.End2End
 {
@@ -35,10 +37,15 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
             }
 
             // give the span a chance to be uploaded and processed
-            await Task.Delay(500);
+            await AwaitAssert(async () =>
+            {
+                var queryResult = await _fixture.QueryOperationsForTraceId(traceId);
+                queryResult.isSuccess.Should().BeTrue();
 
-            var queryResult = await _fixture.QueryOperationsForTraceId(traceId);
-            queryResult.isSuccess.Should().BeTrue();
+                var parsedResults = AppInsightsDeserializer.DeserializeResult(queryResult.response);
+                parsedResults.tables.Count.Should().Be(1);
+                parsedResults.tables[0].rows.Count.Should().Be(1);
+            });
         }
     }
 }
