@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="AppInsightsIntegrationSpec.cs" company="Petabridge, LLC">
+// <copyright file="AppInsightsFixture.cs" company="Petabridge, LLC">
 //      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
 // </copyright>
 // -----------------------------------------------------------------------
@@ -12,12 +12,11 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace OpenTracing.ApplicationInsights.Tests.End2End
 {
-    internal class AppInsightsIntegrationSpec
-    {
-    }
-
     public class AppInsightsFixture : IDisposable
     {
+        private const string URL =
+            "https://api.applicationinsights.io/v1/apps/{0}/query?query={1}";
+
         public AppInsightsFixture()
         {
             /*
@@ -55,15 +54,22 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         /// </summary>
         public HttpClient AppInsightsClient { get; }
 
-        //public async Task<string> QueryOperationsForTraceId(string traceId)
-        //{
-
-        //}
-
         public void Dispose()
         {
             TelemetryConfiguration.Dispose();
             AppInsightsClient.Dispose();
+        }
+
+        public async Task<(string response, bool isSuccess)> QueryOperationsForTraceId(string traceId)
+        {
+            var request = string.Format(URL, AppId,
+                Uri.EscapeUriString($"union * | where operation_Id == \"{traceId}\""));
+
+            var response = await AppInsightsClient.GetAsync(request);
+
+            if (response.IsSuccessStatusCode)
+                return (await response.Content.ReadAsStringAsync(), true);
+            return (response.ReasonPhrase, false);
         }
     }
 }
