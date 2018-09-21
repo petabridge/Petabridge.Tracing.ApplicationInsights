@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DataContracts;
 using OpenTracing.Tag;
 
 namespace OpenTracing.ApplicationInsights
@@ -208,6 +209,15 @@ namespace OpenTracing.ApplicationInsights
         ///     Template method for completing reporting to Application Insights
         /// </summary>
         protected abstract void FinishInternal();
+
+        protected TraceTelemetry LogEvent(DateTimeOffset timestamp, string @event)
+        {
+            var telemetry = new TraceTelemetry(@event) {Timestamp = timestamp};
+            telemetry.Context.Operation.Id = Context.TraceId;
+            telemetry.Context.Operation.ParentId = Context.SpanId;
+
+            return telemetry;
+        }
 
         internal static string MergeFields(IEnumerable<KeyValuePair<string, object>> fields)
         {

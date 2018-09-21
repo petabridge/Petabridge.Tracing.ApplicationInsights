@@ -7,6 +7,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.ApplicationInsights.Extensibility;
 
 namespace OpenTracing.ApplicationInsights.Tests.End2End
@@ -19,6 +20,10 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
     {
         public AppInsightsFixture()
         {
+            /*
+             * Needed for querying the Azure App Insights REST API: 
+             *
+             */
             ApiKey = Environment.GetEnvironmentVariable("APP_INSIGHTS_KEY");
             AppId = Environment.GetEnvironmentVariable("APP_INSIGHTS_APPID");
 
@@ -49,6 +54,11 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         ///     HTTP client with pre-configured settings designed to target https://dev.applicationinsights.io
         /// </summary>
         public HttpClient AppInsightsClient { get; }
+
+        //public async Task<string> QueryOperationsForTraceId(string traceId)
+        //{
+
+        //}
 
         public void Dispose()
         {

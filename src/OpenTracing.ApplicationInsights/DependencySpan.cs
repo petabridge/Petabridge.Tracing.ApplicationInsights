@@ -18,17 +18,18 @@ namespace OpenTracing.ApplicationInsights
     /// </summary>
     public sealed class DependencySpan : ApplicationInsightsSpan
     {
-        private readonly IOperationHolder<DependencyTelemetry> _operation;
+        private IOperationHolder<DependencyTelemetry> _operation;
 
         public DependencySpan(ApplicationInsightsTracer tracer, IApplicationInsightsSpanContext typedContext,
             string operationName, DateTimeOffset start, SpanKind spanKind, Endpoint localEndpoint = null,
             Dictionary<string, string> tagsActual = null)
             : base(tracer, typedContext, operationName, start, spanKind, localEndpoint, tagsActual)
         {
-            _operation = Tracer.Client.StartOperation<DependencyTelemetry>(operationName);
-            _operation.Telemetry.Id = typedContext.SpanId;
+            var telemetry = new DependencyTelemetry(){Id = typedContext.SpanId, Name = operationName};
 
-            InitializeTelemetry(typedContext, localEndpoint, tagsActual, _operation.Telemetry);
+            InitializeTelemetry(typedContext, localEndpoint, tagsActual, telemetry);
+
+            _operation = Tracer.Client.StartOperation(telemetry);
         }
 
         public override IDictionary<string, string> Tags => _operation.Telemetry.Properties ?? EmptyTags;
@@ -44,14 +45,24 @@ namespace OpenTracing.ApplicationInsights
         public override ISpan Log(DateTimeOffset timestamp, string @event)
         {
             // guard the trace so we don't collect garbage
-            if (!Finished.HasValue) Tracer.Client.Track(new TraceTelemetry {Message = @event, Timestamp = timestamp});
+            if (!Finished.HasValue)
+            {
+                Tracer.Client.TrackTrace(LogEvent(timestamp, @event));
+            }
 
             return this;
         }
 
         protected override void FinishInternal()
         {
+            if (Duration.HasValue) // should always be true by this point
+            {
+                _operation.Telemetry.Duration = Duration.Value;
+            }
+
             Tracer.Client.StopOperation(_operation);
+            _operation.Dispose();
+            _operation = null;
         }
     }
 }
