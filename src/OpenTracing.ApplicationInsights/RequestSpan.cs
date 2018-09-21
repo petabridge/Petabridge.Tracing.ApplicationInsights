@@ -44,10 +44,7 @@ namespace OpenTracing.ApplicationInsights
         public override ISpan Log(DateTimeOffset timestamp, string @event)
         {
             // guard the trace so we don't collect garbage
-            if (!Finished.HasValue)
-            {
-                Tracer.Client.TrackTrace(LogEvent(timestamp, @event));
-            }
+            if (!Finished.HasValue) Tracer.Client.TrackTrace(LogEvent(timestamp, @event));
 
             return this;
         }
@@ -55,10 +52,8 @@ namespace OpenTracing.ApplicationInsights
         protected override void FinishInternal()
         {
             if (Duration.HasValue) // should always be true by this point
-            {
                 _operation.Telemetry.Duration = Duration.Value;
-            }
-            
+
             Tracer.Client.StopOperation(_operation);
             _operation.Dispose();
             _operation = null;

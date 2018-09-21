@@ -1,6 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="AppInsightsDeserializer.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace OpenTracing.ApplicationInsights.Tests.End2End

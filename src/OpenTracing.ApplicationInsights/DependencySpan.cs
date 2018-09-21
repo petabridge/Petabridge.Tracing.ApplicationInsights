@@ -25,7 +25,7 @@ namespace OpenTracing.ApplicationInsights
             Dictionary<string, string> tagsActual = null)
             : base(tracer, typedContext, operationName, start, spanKind, localEndpoint, tagsActual)
         {
-            var telemetry = new DependencyTelemetry(){Id = typedContext.SpanId, Name = operationName};
+            var telemetry = new DependencyTelemetry {Id = typedContext.SpanId, Name = operationName};
 
             InitializeTelemetry(typedContext, localEndpoint, tagsActual, telemetry);
 
@@ -45,10 +45,7 @@ namespace OpenTracing.ApplicationInsights
         public override ISpan Log(DateTimeOffset timestamp, string @event)
         {
             // guard the trace so we don't collect garbage
-            if (!Finished.HasValue)
-            {
-                Tracer.Client.TrackTrace(LogEvent(timestamp, @event));
-            }
+            if (!Finished.HasValue) Tracer.Client.TrackTrace(LogEvent(timestamp, @event));
 
             return this;
         }
@@ -56,9 +53,7 @@ namespace OpenTracing.ApplicationInsights
         protected override void FinishInternal()
         {
             if (Duration.HasValue) // should always be true by this point
-            {
                 _operation.Telemetry.Duration = Duration.Value;
-            }
 
             Tracer.Client.StopOperation(_operation);
             _operation.Dispose();

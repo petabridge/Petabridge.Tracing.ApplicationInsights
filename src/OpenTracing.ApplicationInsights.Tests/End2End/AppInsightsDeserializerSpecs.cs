@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// -----------------------------------------------------------------------
+// <copyright file="AppInsightsDeserializerSpecs.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2018 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System.IO;
-using System.Text;
 using FluentAssertions;
 using Xunit;
 
 namespace OpenTracing.ApplicationInsights.Tests.End2End
 {
     /// <summary>
-    /// Sanity checks for ensuring that <see cref="AppInsightsDeserializer"/>
-    /// works as expected.
+    ///     Sanity checks for ensuring that <see cref="AppInsightsDeserializer" />
+    ///     works as expected.
     /// </summary>
     public class AppInsightsDeserializerSpecs
     {
-        private readonly string _sampleJson;
-
         public AppInsightsDeserializerSpecs()
         {
             _sampleJson = File.ReadAllText("End2End/appInsightsResponse.json");
         }
+
+        private readonly string _sampleJson;
 
         [Fact(DisplayName = "Should be able to deserialize AppInsights REST JSON")]
         public void ShouldDeserializeValidAppInsightsJson()

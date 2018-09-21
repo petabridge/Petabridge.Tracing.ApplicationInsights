@@ -40,18 +40,12 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
 
             TelemetryConfiguration = new TelemetryConfiguration(instrumentationKey);
 
-            AppInsightsClient = new HttpClient(new HttpClientHandler(){ ServerCertificateCustomValidationCallback = SslNetCoreLinuxWorkaround });
+            AppInsightsClient = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = SslNetCoreLinuxWorkaround
+            });
             AppInsightsClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             AppInsightsClient.DefaultRequestHeaders.Add("x-api-key", ApiKey);
-        }
-
-        /// <summary>
-        /// Work-around for https://stackoverflow.com/questions/43256337/how-to-ignore-system-net-http-curlexception-peer-certificate-cannot-be-authent on Linux
-        /// </summary>
-        private static bool SslNetCoreLinuxWorkaround(HttpRequestMessage reqMsg, X509Certificate2 cert, X509Chain certChain, SslPolicyErrors policyErrors)
-        {
-            //custom validation
-            return true;
         }
 
         public string ApiKey { get; }
@@ -69,6 +63,18 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         {
             TelemetryConfiguration.Dispose();
             AppInsightsClient.Dispose();
+        }
+
+        /// <summary>
+        ///     Work-around for
+        ///     https://stackoverflow.com/questions/43256337/how-to-ignore-system-net-http-curlexception-peer-certificate-cannot-be-authent
+        ///     on Linux
+        /// </summary>
+        private static bool SslNetCoreLinuxWorkaround(HttpRequestMessage reqMsg, X509Certificate2 cert,
+            X509Chain certChain, SslPolicyErrors policyErrors)
+        {
+            //custom validation
+            return true;
         }
 
         public async Task<(string response, bool isSuccess)> QueryOperationsForTraceId(string traceId)
