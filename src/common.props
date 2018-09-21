@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>Copyright © 2015-2018 Petabridge</Copyright>
+    <Authors>Petabridge</Authors>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <PackageReleaseNotes>Initial release of Petabridge.Tracing.ApplicationInsights.
+We built this driver in order to provide a layer of [OpenTracing](http://opentracing.io/) compatibility on top of [Microsoft's Application Insights](https://azure.microsoft.com/en-us/services/application-insights/) telemetry and analytics service.
+This driver follows [the Application Insights to OpenTracing conventions](https://docs.microsoft.com/en-us/azure/application-insights/application-insights-correlation#open-tracing-and-application-insights) outlined by the Application Insights team.
+`Petabridge.Tracing.ApplicationInsights` is professionally maintained and tested by [Petabridge](http://petabridge.com/) and is used inside some of our commercial products, such as [Phobos: Enterprise Akka.NET DevOps](https://phobos.petabridge.com/).</PackageReleaseNotes>
+    <PackageIconUrl>
+    </PackageIconUrl>
+    <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/blob/dev/LICENSE</PackageLicenseUrl>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <XunitVersion>2.3.1</XunitVersion>
+    <TestSdkVersion>15.7.2</TestSdkVersion>
+    <NBenchVersion>1.2.2</NBenchVersion>
+  </PropertyGroup>
+</Project>
