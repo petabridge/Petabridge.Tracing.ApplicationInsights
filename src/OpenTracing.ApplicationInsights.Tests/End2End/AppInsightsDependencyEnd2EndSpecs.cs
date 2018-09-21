@@ -25,6 +25,9 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         [Fact(DisplayName = "DepdencySpans: should be able to push parent and child spans to AppInsights")]
         public async Task ShouldPushParentAndChildRequestSpansToAppInsights()
         {
+            if (!_fixture.EnableIntegrationSpecs)
+                return;
+
             string traceId = null;
             using (var span = _tracer.BuildSpan("op1").WithSpanKind(SpanKind.CLIENT).StartActive())
             {
@@ -60,6 +63,9 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         [Fact(DisplayName = "DependencySpans: should be able to push span and correlated logs to AppInsights")]
         public async Task ShouldPushSpanLogstoAppInsights()
         {
+            if (!_fixture.EnableIntegrationSpecs)
+                return;
+
             string traceId = null;
             using (var span = _tracer.BuildSpan("op1").WithSpanKind(SpanKind.CLIENT).StartActive())
             {
@@ -84,6 +90,9 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
         [Fact(DisplayName = "DependencySpans: should be able to push simple span to AppInsights")]
         public async Task ShouldPushStandAloneSpanToAppInsights()
         {
+            if (!_fixture.EnableIntegrationSpecs)
+                return;
+
             string traceId = null;
             using (var span = _tracer.BuildSpan("simple1").WithSpanKind(SpanKind.CLIENT).StartActive())
             {

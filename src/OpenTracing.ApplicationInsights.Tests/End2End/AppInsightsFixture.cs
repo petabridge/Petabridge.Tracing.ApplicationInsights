@@ -21,6 +21,9 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
 
         public AppInsightsFixture()
         {
+            // if this value is populated, we will run integration suite. Otherwise, we will not
+            EnableIntegrationSpecs = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APP_INSIGHTS_TEST"));
+
             /*
              * Needed for querying the Azure App Insights REST API: 
              *
@@ -47,6 +50,8 @@ namespace OpenTracing.ApplicationInsights.Tests.End2End
             AppInsightsClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             AppInsightsClient.DefaultRequestHeaders.Add("x-api-key", ApiKey);
         }
+
+        public bool EnableIntegrationSpecs { get; }
 
         public string ApiKey { get; }
 
