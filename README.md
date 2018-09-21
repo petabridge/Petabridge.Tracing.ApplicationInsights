@@ -38,9 +38,16 @@ The output from this activity will show up as "Server Requests" in Application I
 
 > When using `ApplicationInsightsTracer`, if you want to record an operation as a "dependency" request, for instance if it's coming from a client app or driver, then make sure you call `ApplicationInsightsTracer.BuildSpan("operationName").WithSpanKind(SpanKind.CLIENT)`. This will change how the `ISpan` is recorded in Application Insights.
 
-Each distributed trace, even across requests, is correlated automatically in Application Insights:
+Each distributed trace, even across multiple services and devices, is correlated automatically in Application Insights:
 
+![Petabridge.Tracing.ApplicationInsights trace shown inside end-to-end transaction details inside Application Insights](docs/images/screenshots/appinsights-trace-details.png)
 
+From a correlation standpoint:
+
+1. Each `ISpan` is recorded as either `Request` or `Dependency` telemetry inside Application Insights, depending upon which `SpanKind` was specified. By default it's `SpanKind.SERVER`, which correlates to `Request` telemetry.
+2. Each `ISpan.Log` call in OpenTracing is recorded as a `Trace` event inside Application Insights.
+3. OpenTracing `IScopeManager` and `IScope` still works as expected.
+4. All `ISpan.SetTag` calls append tags to the current `Request` or `Dependency` telemetry.
 
 ## Building this solution
 To run the build script associated with this solution, execute the following:
