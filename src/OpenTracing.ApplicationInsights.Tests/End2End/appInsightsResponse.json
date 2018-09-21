@@ -1,0 +1,587 @@
+﻿{
+  "tables": [
+    {
+      "name": "PrimaryResult",
+      "columns": [
+        {
+          "name": "timestamp",
+          "type": "datetime"
+        },
+        {
+          "name": "message",
+          "type": "string"
+        },
+        {
+          "name": "severityLevel",
+          "type": "int"
+        },
+        {
+          "name": "itemType",
+          "type": "string"
+        },
+        {
+          "name": "customDimensions",
+          "type": "dynamic"
+        },
+        {
+          "name": "customMeasurements",
+          "type": "dynamic"
+        },
+        {
+          "name": "operation_Name",
+          "type": "string"
+        },
+        {
+          "name": "operation_Id",
+          "type": "string"
+        },
+        {
+          "name": "operation_ParentId",
+          "type": "string"
+        },
+        {
+          "name": "operation_SyntheticSource",
+          "type": "string"
+        },
+        {
+          "name": "session_Id",
+          "type": "string"
+        },
+        {
+          "name": "user_Id",
+          "type": "string"
+        },
+        {
+          "name": "user_AuthenticatedId",
+          "type": "string"
+        },
+        {
+          "name": "user_AccountId",
+          "type": "string"
+        },
+        {
+          "name": "application_Version",
+          "type": "string"
+        },
+        {
+          "name": "client_Type",
+          "type": "string"
+        },
+        {
+          "name": "client_Model",
+          "type": "string"
+        },
+        {
+          "name": "client_OS",
+          "type": "string"
+        },
+        {
+          "name": "client_IP",
+          "type": "string"
+        },
+        {
+          "name": "client_City",
+          "type": "string"
+        },
+        {
+          "name": "client_StateOrProvince",
+          "type": "string"
+        },
+        {
+          "name": "client_CountryOrRegion",
+          "type": "string"
+        },
+        {
+          "name": "client_Browser",
+          "type": "string"
+        },
+        {
+          "name": "cloud_RoleName",
+          "type": "string"
+        },
+        {
+          "name": "cloud_RoleInstance",
+          "type": "string"
+        },
+        {
+          "name": "appId",
+          "type": "string"
+        },
+        {
+          "name": "appName",
+          "type": "string"
+        },
+        {
+          "name": "iKey",
+          "type": "string"
+        },
+        {
+          "name": "sdkVersion",
+          "type": "string"
+        },
+        {
+          "name": "itemId",
+          "type": "string"
+        },
+        {
+          "name": "itemCount",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "duration",
+          "type": "real"
+        },
+        {
+          "name": "performanceBucket",
+          "type": "string"
+        },
+        {
+          "name": "source",
+          "type": "string"
+        },
+        {
+          "name": "success",
+          "type": "string"
+        },
+        {
+          "name": "resultCode",
+          "type": "string"
+        },
+        {
+          "name": "target",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "data",
+          "type": "string"
+        },
+        {
+          "name": "problemId",
+          "type": "string"
+        },
+        {
+          "name": "handledAt",
+          "type": "string"
+        },
+        {
+          "name": "assembly",
+          "type": "string"
+        },
+        {
+          "name": "method",
+          "type": "string"
+        },
+        {
+          "name": "outerType",
+          "type": "string"
+        },
+        {
+          "name": "outerMessage",
+          "type": "string"
+        },
+        {
+          "name": "outerAssembly",
+          "type": "string"
+        },
+        {
+          "name": "outerMethod",
+          "type": "string"
+        },
+        {
+          "name": "innermostType",
+          "type": "string"
+        },
+        {
+          "name": "innermostMessage",
+          "type": "string"
+        },
+        {
+          "name": "innermostAssembly",
+          "type": "string"
+        },
+        {
+          "name": "innermostMethod",
+          "type": "string"
+        },
+        {
+          "name": "details",
+          "type": "dynamic"
+        },
+        {
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "name": "size",
+          "type": "real"
+        },
+        {
+          "name": "value",
+          "type": "real"
+        },
+        {
+          "name": "valueCount",
+          "type": "int"
+        },
+        {
+          "name": "valueSum",
+          "type": "real"
+        },
+        {
+          "name": "valueMin",
+          "type": "real"
+        },
+        {
+          "name": "valueMax",
+          "type": "real"
+        },
+        {
+          "name": "valueStdDev",
+          "type": "real"
+        },
+        {
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "name": "counter",
+          "type": "string"
+        },
+        {
+          "name": "instance",
+          "type": "string"
+        },
+        {
+          "name": "networkDuration",
+          "type": "real"
+        },
+        {
+          "name": "sendDuration",
+          "type": "real"
+        },
+        {
+          "name": "receiveDuration",
+          "type": "real"
+        },
+        {
+          "name": "processingDuration",
+          "type": "real"
+        },
+        {
+          "name": "totalDuration",
+          "type": "real"
+        }
+      ],
+      "rows": [
+        [
+          "2018-09-20T23:40:03.0866779Z",
+          "",
+          null,
+          "request",
+          "{\"strLen\":\"3\"}",
+          null,
+          "akka://MySys/user/$a",
+          "1d364c208c3dd48d324e407ca75859f0",
+          "1d364c208c3dd48d324e407ca75859f0",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "PC",
+          "",
+          "",
+          "0.0.0.0",
+          "",
+          "",
+          "United States",
+          "",
+          "",
+          "BFG-9000",
+          "testid",
+          "testapp",
+          "a9a5d9d1-c8fb-4ddc-959d-d747702f6094",
+          "dotnet:2.7.2-23439",
+          "7fcc49f9-bd2e-11e8-abe7-11626e3183eb",
+          1,
+          "akka://MySys/user/$a",
+          "|1d364c208c3dd48d324e407ca75859f0.ab6d455_",
+          "",
+          8.3628,
+          "<250ms",
+          "",
+          "True",
+          "200",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "2018-09-20T23:40:03.0889334Z",
+          "",
+          null,
+          "request",
+          "{\"nested\":\"True\"}",
+          null,
+          "akka://MySys/user/$a.subOp",
+          "1d364c208c3dd48d324e407ca75859f0",
+          "cd2a8f3e66fbd8ed6346fa7b32e060e9",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "PC",
+          "",
+          "",
+          "0.0.0.0",
+          "",
+          "",
+          "United States",
+          "",
+          "",
+          "BFG-9000",
+          "testid",
+          "testapp",
+          "a9a5d9d1-c8fb-4ddc-959d-d747702f6094",
+          "dotnet:2.7.2-23439",
+          "7fcc49f8-bd2e-11e8-abe7-11626e3183eb",
+          1,
+          "akka://MySys/user/$a.subOp",
+          "|1d364c208c3dd48d324e407ca75859f0.ab6d455_1.",
+          "",
+          3.8035,
+          "<250ms",
+          "",
+          "True",
+          "200",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "2018-09-20T23:40:03.0866894Z",
+          "",
+          null,
+          "customEvent",
+          null,
+          null,
+          "",
+          "1d364c208c3dd48d324e407ca75859f0",
+          "cd2a8f3e66fbd8ed6346fa7b32e060e9",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "PC",
+          "",
+          "",
+          "0.0.0.0",
+          "",
+          "",
+          "United States",
+          "",
+          "",
+          "BFG-9000",
+          "testid",
+          "testapp",
+          "a9a5d9d1-c8fb-4ddc-959d-d747702f6094",
+          "dotnet:2.7.2-23439",
+          "7fd12c52-bd2e-11e8-abe7-11626e3183eb",
+          1,
+          "foo",
+          "",
+          "",
+          null,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "2018-09-20T23:40:03.0889345Z",
+          "",
+          null,
+          "customEvent",
+          null,
+          null,
+          "",
+          "1d364c208c3dd48d324e407ca75859f0",
+          "2b386db481145a1c0572ec5db268aea2",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "PC",
+          "",
+          "",
+          "0.0.0.0",
+          "",
+          "",
+          "United States",
+          "",
+          "",
+          "BFG-9000",
+          "testid",
+          "testapp",
+          "a9a5d9d1-c8fb-4ddc-959d-d747702f6094",
+          "dotnet:2.7.2-23439",
+          "7fd12c53-bd2e-11e8-abe7-11626e3183eb",
+          1,
+          "Do nested operations work?",
+          "",
+          "",
+          null,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "",
+          "",
+          "",
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    }
+  ]
+}
