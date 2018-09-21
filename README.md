@@ -34,9 +34,13 @@ using (var current = tracer.BuildSpan(Context.Self.Path.ToString()).StartActive(
 
 The output from this activity will show up as "Server Requests" in Application Insights:
 
-![Petabridge.Tracing.ApplicationInsights spans showing up as server requests](docs/images/screenshots/appinsights-server-requests.pnd)
+![Petabridge.Tracing.ApplicationInsights spans showing up as server requests](docs/images/screenshots/appinsights-server-requests.png)
 
 > When using `ApplicationInsightsTracer`, if you want to record an operation as a "dependency" request, for instance if it's coming from a client app or driver, then make sure you call `ApplicationInsightsTracer.BuildSpan("operationName").WithSpanKind(SpanKind.CLIENT)`. This will change how the `ISpan` is recorded in Application Insights.
+
+Each distributed trace, even across requests, is correlated automatically in Application Insights:
+
+
 
 ## Building this solution
 To run the build script associated with this solution, execute the following:
