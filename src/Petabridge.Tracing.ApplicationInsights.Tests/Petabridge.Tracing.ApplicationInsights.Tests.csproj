@@ -3,6 +3,10 @@
 
   <PropertyGroup>    
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <PublicSign>True</PublicSign>
+    <AssemblyOriginatorKeyFile>../Petabridge.Tracing.ApplicationInsights/Petabridge.Tracing.ApplicationInsights.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
