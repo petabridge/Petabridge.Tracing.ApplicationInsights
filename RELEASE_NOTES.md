@@ -1,3 +1,6 @@
+#### 0.1.1 November 12 2018 ####
+Made the Petabridge.Tracing.ApplicationInsights strong-named using [Public Signing](https://github.com/dotnet/corefx/blob/master/Documentation/project-docs/public-signing.md#public-signing)
+
 #### 0.1.0 September 21 2018 ####
 Initial release of Petabridge.Tracing.ApplicationInsights.
 
