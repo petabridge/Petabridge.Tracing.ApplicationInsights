@@ -20,9 +20,9 @@ namespace Petabridge.Tracing.ApplicationInsights.Propagation
     /// </remarks>
     public sealed class B3Propagator : IPropagator<ITextMap>
     {
-        internal const string B3TraceId = "X-B3-TraceId";
-        internal const string B3SpanId = "X-B3-SpanId";
-        internal const string B3ParentId = "X-B3-ParentSpanId";
+        internal const string B3TraceId = "x-b3-traceid";
+        internal const string B3SpanId = "x-b3-spanid";
+        internal const string B3ParentId = "x-b3-parentspanid";
 
         public void Inject(ApplicationInsightsSpanContext context, ITextMap carrier)
         {
@@ -38,7 +38,7 @@ namespace Petabridge.Tracing.ApplicationInsights.Propagation
             string spanId = null;
             string parentId = null;
             foreach (var entry in carrier)
-                switch (entry.Key)
+                switch (entry.Key.ToLowerInvariant())
                 {
                     case B3TraceId:
                         traceId = entry.Value;
