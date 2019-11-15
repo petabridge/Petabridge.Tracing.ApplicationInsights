@@ -12,10 +12,6 @@ jobs:
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
     pool:
       vmImage: ${{ parameters.vmImage }}
-    env:
-      APP_INSIGHTS_TEST: ${{ APP_INSIGHTS_TEST }}
-      APP_INSIGHTS_KEY: ${{ APP_INSIGHTS_KEY }}
-      APP_INSIGHTS_APPID: ${{ APP_INSIGHTS_APPID }}
     steps:
       - checkout: self  # self represents the repo where the initial Pipelines YAML file was found
         clean: false  # whether to fetch clean each time
@@ -29,6 +25,10 @@ jobs:
           arguments: ${{ parameters.scriptArgs }}
         continueOnError: true
         condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
+        env:
+          APP_INSIGHTS_TEST: ${{ APP_INSIGHTS_TEST }}
+          APP_INSIGHTS_KEY: ${{ APP_INSIGHTS_KEY }}
+          APP_INSIGHTS_APPID: ${{ APP_INSIGHTS_APPID }}
       # Windows
       - task: BatchScript@1
         displayName: Windows Build
@@ -37,6 +37,10 @@ jobs:
           arguments: ${{ parameters.scriptArgs }}
         continueOnError: true
         condition: eq( variables['Agent.OS'], 'Windows_NT' )
+        env:
+          APP_INSIGHTS_TEST: ${{ APP_INSIGHTS_TEST }}
+          APP_INSIGHTS_KEY: ${{ APP_INSIGHTS_KEY }}
+          APP_INSIGHTS_APPID: ${{ APP_INSIGHTS_APPID }}
       - task: PublishTestResults@2
         inputs:
           testRunner: VSTest
