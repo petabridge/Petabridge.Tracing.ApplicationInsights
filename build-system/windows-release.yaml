@@ -15,11 +15,11 @@ variables:
   - group: signingSecrets
   - group: nugetKeys
   - name: githubConnectionName
-    value: Petabridge
+    value: PbReleaseNotes
   - name: projectName
-    value: Petabridge.Tracing.Zipkin
+    value: Petabridge.Tracing.ApplicationInsights
   - name: githubRepositoryName
-    value: petabridge/Petabridge.Tracing.Zipkin
+    value: petabridge/Petabridge.Tracing.ApplicationInsights
 
 steps:
 - task: BatchScript@1
