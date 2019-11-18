@@ -12,7 +12,7 @@ pr:
     include: [ dev, master ] # branch names which will trigger a build
 
 variables:
-  - group: appInsightsVariables
+- group: appInsightsVariables
 
 name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
