@@ -20,9 +20,21 @@ namespace Petabridge.Tracing.ApplicationInsights.Propagation
     /// </remarks>
     public sealed class B3Propagator : IPropagator<ITextMap>
     {
+        /*
+         * Keep old headers for outbound
+         *
+         */
         internal const string B3TraceId = "X-B3-TraceId";
         internal const string B3SpanId = "X-B3-SpanId";
         internal const string B3ParentId = "X-B3-ParentSpanId";
+
+        /*
+         * Keep new headers for case-insensitive analysis
+         *
+         */
+        internal const string B3TraceIdLower = "x-b3-traceid";
+        internal const string B3SpanIdLower = "x-b3-spanid";
+        internal const string B3ParentIdLower = "x-b3-parentspanid";
 
         public void Inject(ApplicationInsightsSpanContext context, ITextMap carrier)
         {
@@ -38,15 +50,15 @@ namespace Petabridge.Tracing.ApplicationInsights.Propagation
             string spanId = null;
             string parentId = null;
             foreach (var entry in carrier)
-                switch (entry.Key)
+                switch (entry.Key.ToLowerInvariant())
                 {
-                    case B3TraceId:
+                    case B3TraceIdLower:
                         traceId = entry.Value;
                         break;
-                    case B3SpanId:
+                    case B3SpanIdLower:
                         spanId = entry.Value;
                         break;
-                    case B3ParentId:
+                    case B3ParentIdLower:
                         parentId = entry.Value;
                         break;
                 }
