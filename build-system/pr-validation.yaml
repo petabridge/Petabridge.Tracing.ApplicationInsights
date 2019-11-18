@@ -11,9 +11,6 @@ pr:
   branches:
     include: [ dev, master ] # branch names which will trigger a build
 
-variables:
-  - group: appInsightsVariables
-
 name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
 jobs:

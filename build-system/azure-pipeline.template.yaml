@@ -6,6 +6,9 @@ parameters:
   scriptArgs: 'all'
   timeoutInMinutes: 120
 
+variables:
+  - group: appInsightsVariables
+
 jobs:
   - job: ${{ parameters.name }}
     displayName: ${{ parameters.displayName }}
