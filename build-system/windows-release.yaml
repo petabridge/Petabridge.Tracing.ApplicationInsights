@@ -15,18 +15,18 @@ variables:
   - group: signingSecrets
   - group: nugetKeys
   - name: githubConnectionName
-    value: PbReleaseNotes
+    value: Petabridge
   - name: projectName
-    value: Petabridge.Tracing.ApplicationInsights
+    value: Petabridge.Tracing.Zipkin
   - name: githubRepositoryName
-    value: petabridge/Petabridge.Tracing.ApplicationInsights
+    value: petabridge/Petabridge.Tracing.Zipkin
 
 steps:
 - task: BatchScript@1
   displayName: 'FAKE Build'
   inputs:
     filename: build.cmd
-    arguments: 'All SignClientUser=$(signingUsername) SignClientSecret=$(signingPassword) nugetpublishurl=https://api.nuget.org/v3/index.json nugetkey=$(nugetKey)'
+    arguments: 'All SignClientUser=$(signingUsername) SignClientSecret=$(signingPassword) nugetpublishurl=https://www.nuget.org/api/v2/package nugetkey=$(nugetKey)'
 
 - task: GitHubRelease@0
   displayName: 'GitHub release (create)'

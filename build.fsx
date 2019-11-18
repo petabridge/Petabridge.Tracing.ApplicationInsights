@@ -10,19 +10,14 @@ open Fake.DotNetCli
 open Fake.DocFxHelper
 
 // Information about the project for Nuget and Assembly info files
-let product = "Petabridge.Library"
+let product = "OpenTracing.ApplicationInsights"
 let configuration = "Release"
-
-// Metadata used when signing packages and DLLs
-let signingName = "Petabridge.Tracing.Zipkin"
-let signingDescription = "Zipkin dristributed tracing engine driver, developed by Petabridge®"
-let signingUrl = "https://github.com/petabridge/Petabridge.Tracing.Zipkin"
 
 // Read release notes and version
 let solutionFile = FindFirstMatchingFile "*.sln" __SOURCE_DIRECTORY__  // dynamically look up the solution
 let buildNumber = environVarOrDefault "BUILD_NUMBER" "0"
 let hasTeamCity = (not (buildNumber = "0")) // check if we have the TeamCity environment variable for build # set
-let preReleaseVersionSuffix = "beta" + (if (not (buildNumber = "0")) then (buildNumber) else DateTime.UtcNow.Ticks.ToString())
+let preReleaseVersionSuffix = (if (not (buildNumber = "0")) then (buildNumber) else "") + "-beta"
 let versionSuffix = 
     match (getBuildParam "nugetprerelease") with
     | "dev" -> preReleaseVersionSuffix
@@ -45,8 +40,6 @@ let workingDir = output @@ "build"
 let nugetExe = FullName @"./tools/nuget.exe"
 
 Target "Clean" (fun _ ->
-    ActivateFinalTarget "KillCreatedProcesses"
-
     CleanDir output
     CleanDir outputTests
     CleanDir outputPerfTests
@@ -101,21 +94,20 @@ Target "RunTests" (fun _ ->
     let projects = 
         match (isWindows) with 
         | true -> !! "./src/**/*.Tests.csproj"
-                  -- "./src/**/*.Integration.Tests.csproj" // Zipkin containers can't run on Windows VMs
         | _ -> !! "./src/**/*.Tests.csproj" // if you need to filter specs for Linux vs. Windows, do it here
 
     let runSingleProject project =
         let arguments =
             match (hasTeamCity) with
-            | true -> (sprintf "test -c Release --no-build --logger:trx --logger:\"console;verbosity=normal\" --results-directory %s -- -parallel none -teamcity" (outputTests))
-            | false -> (sprintf "test -c Release --no-build --logger:trx --logger:\"console;verbosity=normal\" --results-directory %s -- -parallel none" (outputTests))
+            | true -> (sprintf "xunit -c Release -nobuild -parallel none -teamcity -xml %s_xunit.xml" (outputTests @@ fileNameWithoutExt project))
+            | false -> (sprintf "xunit -c Release -nobuild -parallel none -xml %s_xunit.xml" (outputTests @@ fileNameWithoutExt project))
 
         let result = ExecProcess(fun info ->
             info.FileName <- "dotnet"
             info.WorkingDirectory <- (Directory.GetParent project).FullName
             info.Arguments <- arguments) (TimeSpan.FromMinutes 30.0) 
         
-        ResultHandling.failBuildIfXUnitReportedError TestRunnerErrorLevel.DontFailBuild result  
+        ResultHandling.failBuildIfXUnitReportedError TestRunnerErrorLevel.DontFailBuild result
 
     projects |> Seq.iter (log)
     projects |> Seq.iter (runSingleProject)
@@ -143,54 +135,6 @@ Target "NBench" <| fun _ ->
     
     projects |> Seq.iter runSingleProject
 
-
-//--------------------------------------------------------------------------------
-// Code signing targets
-//--------------------------------------------------------------------------------
-Target "SignPackages" (fun _ ->
-    let canSign = hasBuildParam "SignClientSecret" && hasBuildParam "SignClientUser"
-    if(canSign) then
-        log "Signing information is available."
-        
-        let assemblies = !! (outputNuGet @@ "*.nupkg")
-
-        let signPath =
-            let globalTool = tryFindFileOnPath "SignClient.exe"
-            match globalTool with
-                | Some t -> t
-                | None -> if isWindows then findToolInSubPath "SignClient.exe" "tools/signclient"
-                          elif isMacOS then findToolInSubPath "SignClient" "tools/signclient"
-                          else findToolInSubPath "SignClient" "tools/signclient"
-
-        let signAssembly assembly =
-            let args = StringBuilder()
-                    |> append "sign"
-                    |> append "--config"
-                    |> append (__SOURCE_DIRECTORY__ @@ "appsettings.json") 
-                    |> append "-i"
-                    |> append assembly
-                    |> append "-r"
-                    |> append (getBuildParam "SignClientUser")
-                    |> append "-s"
-                    |> append (getBuildParam "SignClientSecret")
-                    |> append "-n"
-                    |> append signingName
-                    |> append "-d"
-                    |> append signingDescription
-                    |> append "-u"
-                    |> append signingUrl
-                    |> toText
-
-            let result = ExecProcess(fun info -> 
-                info.FileName <- signPath
-                info.WorkingDirectory <- __SOURCE_DIRECTORY__
-                info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-            if result <> 0 then failwithf "SignClient failed.%s" args
-
-        assemblies |> Seq.iter (signAssembly)
-    else
-        log "SignClientSecret not available. Skipping signing"
-)
 
 //--------------------------------------------------------------------------------
 // Nuget targets 
@@ -261,19 +205,6 @@ Target "DocFx" (fun _ ->
 )
 
 //--------------------------------------------------------------------------------
-// Cleanup
-//--------------------------------------------------------------------------------
-
-FinalTarget "KillCreatedProcesses" (fun _ ->
-    log "Shutting down dotnet build-server"
-    let result = ExecProcess(fun info -> 
-            info.FileName <- "dotnet"
-            info.WorkingDirectory <- __SOURCE_DIRECTORY__
-            info.Arguments <- "build-server shutdown") (System.TimeSpan.FromMinutes 2.0)
-    if result <> 0 then failwithf "dotnet build-server shutdown failed"
-)
-
-//--------------------------------------------------------------------------------
 // Help 
 //--------------------------------------------------------------------------------
 
@@ -283,12 +214,11 @@ Target "Help" <| fun _ ->
       "./build.ps1 [target]"
       ""
       " Targets for building:"
-      " * Build         Builds"
-      " * Nuget         Create and optionally publish nugets packages"
-      " * SignPackages  Signs all NuGet packages, provided that the following arguments are passed into the script: SignClientSecret={secret} and SignClientUser={username}"
-      " * RunTests      Runs tests"
-      " * All           Builds, run tests, creates and optionally publish nuget packages"
-      " * DocFx         Creates a DocFx-based website for this solution"
+      " * Build      Builds"
+      " * Nuget      Create and optionally publish nugets packages"
+      " * RunTests   Runs tests"
+      " * All        Builds, run tests, creates and optionally publish nuget packages"
+      " * DocFx      Creates a DocFx-based website for this solution"
       ""
       " Other Targets"
       " * Help       Display this help" 
@@ -306,14 +236,13 @@ Target "Nuget" DoNothing
 "Clean" ==> "RestorePackages" ==> "AssemblyInfo" ==> "Build" ==> "BuildRelease"
 
 // tests dependencies
-"Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
 
 // nuget dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "CreateNuget"
-"CreateNuget" ==> "SignPackages" ==> "PublishNuget" ==> "Nuget"
+"CreateNuget" ==> "PublishNuget" ==> "Nuget"
 
 // docs
-"Clean" ==> "RestorePackages" ==> "BuildRelease" ==> "Docfx"
+"BuildRelease" ==> "Docfx"
 
 // all
 "BuildRelease" ==> "All"
