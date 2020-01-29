@@ -1,3 +1,3 @@
-#### 0.1.2 November 18 2019 ####
-* [Resolved: case insensitive HTTP headers](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/22)
-* Updated all underlying dependencies.
+#### 0.1.3 January 29 2020 ####
+* Updated to latest Application Insights driver (2.12.1)
+* Updated to latest Akka.NET version (1.3.17)
