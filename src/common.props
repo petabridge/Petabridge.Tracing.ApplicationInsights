@@ -14,7 +14,7 @@ Updated all underlying dependencies.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <TestSdkVersion>15.7.2</TestSdkVersion>
+    <TestSdkVersion>16.4.0</TestSdkVersion>
     <NBenchVersion>1.2.2</NBenchVersion>
   </PropertyGroup>
 </Project>
