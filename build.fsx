@@ -158,7 +158,7 @@ Target "SignPackages" (fun _ ->
     if(canSign) then
         log "Signing information is available."
         
-        let assemblies = !! (outputNuGet @@ "*.nupkg")
+        let assemblies = !! (outputNuGet @@ "*.**upkg")
 
         let signPath =
             let globalTool = tryFindFileOnPath "SignClient.exe"
@@ -224,7 +224,7 @@ Target "CreateNuget" (fun _ ->
 )
 
 Target "PublishNuget" (fun _ ->
-    let projects = !! "./bin/nuget/*.nupkg" -- "./bin/nuget/*.symbols.nupkg"
+    let projects = !! "./bin/nuget/*.**upkg"
     let apiKey = getBuildParamOrDefault "nugetkey" ""
     let source = getBuildParamOrDefault "nugetpublishurl" ""
     let symbolSource = source
@@ -236,18 +236,10 @@ Target "PublishNuget" (fun _ ->
                 (fun p -> 
                     { p with 
                         TimeOut = TimeSpan.FromMinutes 10. })
-                (sprintf "nuget push %s --api-key %s --source %s --symbol-source %s" project apiKey source symbolSource)
-
-        projects |> Seq.iter (runSingleProject)
-    else if (not (source = "") && not (apiKey = "") && not shouldPublishSymbolsPackages) then
-        let runSingleProject project =
-            DotNetCli.RunCommand
-                (fun p -> 
-                    { p with 
-                        TimeOut = TimeSpan.FromMinutes 10. })
                 (sprintf "nuget push %s --api-key %s --source %s" project apiKey source)
 
         projects |> Seq.iter (runSingleProject)
+
 )
 
 //--------------------------------------------------------------------------------
