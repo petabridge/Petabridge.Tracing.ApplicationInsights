@@ -3,7 +3,7 @@
 
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>$(NetStandardLibVersion)</TargetFramework>
     <Description>OpenTracing-compatible ITracer that exports trace data to Microsoft Application Insights.</Description>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
