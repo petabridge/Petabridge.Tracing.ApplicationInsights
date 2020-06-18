@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.4.5" />
+    <PackageReference Include="Akka" Version="1.4.8" />
   </ItemGroup>
 
   <ItemGroup>
