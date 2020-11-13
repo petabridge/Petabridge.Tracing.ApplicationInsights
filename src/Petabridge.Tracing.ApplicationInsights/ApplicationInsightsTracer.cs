@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Net.NetworkInformation;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using OpenTracing;
@@ -51,6 +52,17 @@ namespace Petabridge.Tracing.ApplicationInsights
         public ApplicationInsightsTracer(TelemetryConfiguration config, Endpoint localEndpoint = null) : this(config,
             new AsyncLocalScopeManager(),
             new B3Propagator(), new DateTimeOffsetTimeProvider(), localEndpoint)
+        {
+        }
+
+        /// <summary>
+        /// Use this constructor in combination with Phobos and the ActorScopeManager
+        /// https://phobos.petabridge.com/api/Phobos.Tracing.Scopes.ActorScopeManager.html
+        /// </summary>
+        /// <param name="config">The ApplicationInsights TelemetryConfiguration</param>
+        /// <param name="scopeManager">An <see cref="OpenTracing.IScopeManager"/></param>
+        public ApplicationInsightsTracer(TelemetryConfiguration config, IScopeManager scopeManager) : this(config,
+            scopeManager, new B3Propagator(), new DateTimeOffsetTimeProvider(), null)
         {
         }
 
