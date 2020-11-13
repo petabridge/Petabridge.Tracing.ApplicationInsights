@@ -1,10 +1,11 @@
 <Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2015-2018 Petabridge</Copyright>
+    <Copyright>Copyright © 2015-2020 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.1.3</VersionPrefix>
-    <PackageReleaseNotes>Updated to latest Application Insights driver (2.12.1)
-Updated to latest Akka.NET version (1.3.17)</PackageReleaseNotes>
+    <VersionPrefix>0.2.1</VersionPrefix>
+    <PackageReleaseNotes>Updated to latest Application Insights driver (2.16.0)
+Updated to latest [Akka.NET version (1.4.11)](https://github.com/akkadotnet/akka.net/releases/tag/1.4.11)
+[Added constructor overload for passing in `IScopeManager` more easily](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/64)</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
@@ -14,8 +15,10 @@ Updated to latest Akka.NET version (1.3.17)</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <TestSdkVersion>15.7.2</TestSdkVersion>
+    <TestSdkVersion>16.8.0</TestSdkVersion>
     <NBenchVersion>1.2.2</NBenchVersion>
+    <NetStandardLibVersion>netstandard2.0</NetStandardLibVersion>
+    <NetCoreTestVersion>netcoreapp3.1</NetCoreTestVersion>
   </PropertyGroup>
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
