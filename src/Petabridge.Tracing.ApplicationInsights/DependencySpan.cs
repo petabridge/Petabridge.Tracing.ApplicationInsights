@@ -38,7 +38,15 @@ namespace Petabridge.Tracing.ApplicationInsights
         public override ISpan SetTag(string key, string value)
         {
             // guard the trace so we don't collect garbage
-            if (!Finished.HasValue) _operation.Telemetry.Properties[key] = value;
+            if (!Finished.HasValue)
+            {
+                _operation.Telemetry.Properties[key] = value;
+                // need to flag this as an error in Application Insights
+                if (key.Equals(OpenTracing.Tag.Tags.Error.Key))
+                {
+                    _operation.Telemetry.Success = false;
+                }
+            }
 
             return this;
         }
