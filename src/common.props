@@ -2,10 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2020 Petabridge</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.2.1</VersionPrefix>
-    <PackageReleaseNotes>Updated to latest Application Insights driver (2.16.0)
-Updated to latest [Akka.NET version (1.4.11)](https://github.com/akkadotnet/akka.net/releases/tag/1.4.11)
-[Added constructor overload for passing in `IScopeManager` more easily](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/64)</PackageReleaseNotes>
+    <VersionPrefix>0.3.0</VersionPrefix>
+    <PackageReleaseNotes>Updated to latest Application Insights driver (2.20.0)
+[Resolved: Need to mark errors recorded in spans as errors in the Application Insights client](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/114)</PackageReleaseNotes>
     <PackageIconUrl>
     </PackageIconUrl>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
@@ -15,7 +14,7 @@ Updated to latest [Akka.NET version (1.4.11)](https://github.com/akkadotnet/akka
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <TestSdkVersion>16.8.0</TestSdkVersion>
+    <TestSdkVersion>17.1.0</TestSdkVersion>
     <NBenchVersion>1.2.2</NBenchVersion>
     <NetStandardLibVersion>netstandard2.0</NetStandardLibVersion>
     <NetCoreTestVersion>netcoreapp3.1</NetCoreTestVersion>

@@ -1,4 +1,3 @@
-#### 0.2.1 November 12 2020 ####
-* Updated to latest Application Insights driver (2.16.0)
-* Updated to latest [Akka.NET version (1.4.11)](https://github.com/akkadotnet/akka.net/releases/tag/1.4.11)
-* [Added constructor overload for passing in `IScopeManager` more easily](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/64)
+#### 0.3.0 March 18 2022 ####
+* Updated to latest Application Insights driver (2.20.0)
+* [Resolved: Need to mark errors recorded in spans as errors in the Application Insights client](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/114)
