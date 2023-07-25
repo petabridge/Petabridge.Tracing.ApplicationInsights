@@ -5,10 +5,6 @@
   <PropertyGroup>
     <TargetFramework>$(NetStandardLibVersion)</TargetFramework>
     <Description>OpenTracing-compatible ITracer that exports trace data to Microsoft Application Insights.</Description>
-    <SignAssembly>true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <PublicSign>True</PublicSign>
-    <AssemblyOriginatorKeyFile>Petabridge.Tracing.ApplicationInsights.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 
