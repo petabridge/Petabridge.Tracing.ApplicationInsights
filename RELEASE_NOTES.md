@@ -1,3 +1,3 @@
-#### 0.3.0 March 18 2022 ####
-* Updated to latest Application Insights driver (2.20.0)
-* [Resolved: Need to mark errors recorded in spans as errors in the Application Insights client](https://github.com/petabridge/Petabridge.Tracing.ApplicationInsights/issues/114)
+#### 0.4.0 July 25 2023 ####
+* Updated to Akka.NET v1.4.46 to avoid System.Drawing security issue
+* Disabled strong-naming
